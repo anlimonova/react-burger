@@ -3,7 +3,3 @@
 	grid-template-columns: 1fr 1fr;
 	gap: 24px 32px;
 }
-
-.burger-ingredients-group__list li {
-	list-style: none;
-}
