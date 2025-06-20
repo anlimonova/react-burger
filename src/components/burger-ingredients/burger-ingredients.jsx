@@ -5,7 +5,7 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ingredientPropType } from '@utils/prop-types.js';
 import { IngredientsGroup } from './ingredients-group/ingredients-group.jsx';
 
-export const BurgerIngredients = ({ ingredients }) => {
+export const BurgerIngredients = ({ ingredients, onItemClick }) => {
 	const filterIngredientsByType = (type) => {
 		return ingredients.filter((ingredient) => ingredient.type === type);
 	};
@@ -45,6 +45,7 @@ export const BurgerIngredients = ({ ingredients }) => {
 					<IngredientsGroup
 						key={index}
 						title={group.text}
+						onItemClick={onItemClick}
 						ingredients={filterIngredientsByType(group.id)}></IngredientsGroup>
 				))}
 			</div>
@@ -54,4 +55,5 @@ export const BurgerIngredients = ({ ingredients }) => {
 
 BurgerIngredients.propTypes = {
 	ingredients: PropTypes.arrayOf(ingredientPropType.isRequired).isRequired,
+	onItemClick: PropTypes.func.isRequired,
 };

@@ -1,12 +1,16 @@
 import React from 'react';
 import styles from './ingredient-item.module.css';
 import { ingredientPropType } from '@utils/prop-types.js';
-import { Price } from '@components/price/price.jsx';
+import { Price } from '@components/ui/price/price.jsx';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import * as PropTypes from 'prop-types';
 
-export const IngredientItem = ({ ingredient }) => {
+export const IngredientItem = ({ ingredient, onItemClick }) => {
 	return (
-		<div className={styles['ingredient-item']}>
+		<button
+			type={'button'}
+			className={styles['ingredient-item']}
+			onClick={() => onItemClick(ingredient)}>
 			<Counter count={1} size='default' extraClass='m-1' />
 			<img
 				className={styles['ingredient-item__image'] + ' ml-4 mr-4'}
@@ -19,10 +23,11 @@ export const IngredientItem = ({ ingredient }) => {
 				}>
 				{ingredient.name}
 			</span>
-		</div>
+		</button>
 	);
 };
 
 IngredientItem.propTypes = {
 	ingredient: ingredientPropType.isRequired,
+	onItemClick: PropTypes.func.isRequired,
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './total-price.module.css';
 import * as PropTypes from 'prop-types';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Price } from '@components/price/price.jsx';
+import { Price } from '@components/ui/price/price.jsx';
 
 export const TotalPrice = ({ price }) => {
 	return (
