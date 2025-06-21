@@ -8,8 +8,6 @@
 
 .burger_ingredients_wrapper {
 	height: 100%;
-	margin-top: 40px;
-	padding-bottom: 40px;
 	overflow-y: auto;
 }
 

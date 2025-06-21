@@ -1,6 +1,7 @@
 .burger_constructor {
 	display: flex;
 	flex-direction: column;
+	align-items: flex-end;
 	width: 600px;
 	padding-bottom: 52px;
 	color: var(--text-primary-color);
@@ -12,8 +13,10 @@
 
 .burger_constructor_filling {
 	height: calc(100% - 192px);
+	margin-right: -16px;
 	margin-left: -32px;
-	overflow: visible auto;
+	padding-right: 8px;
+	overflow-y: auto;
 }
 
 .burger_constructor_filling li {

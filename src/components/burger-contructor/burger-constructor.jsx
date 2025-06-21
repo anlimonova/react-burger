@@ -15,9 +15,8 @@ export const BurgerConstructor = ({ ingredients }) => {
 
 	return (
 		<section className={styles.burger_constructor}>
-			<div className={styles.burger_constructor_ingredients + ' pl-8'}>
+			<div className={styles.burger_constructor_ingredients + ' pl-8 pr-4'}>
 				<ConstructorElement
-					className={'ml-8'}
 					type='top'
 					isLocked={true}
 					text={`${bun.name} (верх)`}
