@@ -1,5 +1,26 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	margin: 0;
+}
+
+ul {
+	list-style: none;
+}
+
+button {
+	width: auto;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	background: transparent;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	appearance: none;
 }
 
 /* Fix for scrollbar */

@@ -1,0 +1,17 @@
+.price-row {
+	display: flex;
+	align-items: center;
+}
+
+.price-row svg {
+	margin-left: 8px;
+}
+
+.price-large {
+	font-size: 48px;
+}
+
+.price-large svg {
+	width: 36px;
+	height: 36px;
+}

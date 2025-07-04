@@ -1,7 +1,37 @@
 .burger_constructor {
 	display: flex;
 	flex-direction: column;
+	align-items: flex-end;
 	width: 600px;
-	padding-bottom: 20px;
+	padding-bottom: 52px;
 	color: var(--text-primary-color);
+}
+
+.burger_constructor_ingredients {
+	max-height: 656px;
+}
+
+.burger_constructor_filling {
+	height: calc(100% - 192px);
+	margin-right: -16px;
+	margin-left: -32px;
+	padding-right: 8px;
+	overflow-y: auto;
+}
+
+.burger_constructor_filling li {
+	position: relative;
+}
+
+.burger_constructor_filling li + li {
+	margin-top: 16px;
+}
+
+.ingredient_drag {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto 8px auto 0;
+	cursor: grab;
 }

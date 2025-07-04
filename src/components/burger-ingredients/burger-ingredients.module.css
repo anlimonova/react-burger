@@ -6,6 +6,11 @@
 	font-family: 'Jet Brains Mono', serif;
 }
 
+.burger_ingredients_wrapper {
+	height: 100%;
+	overflow-y: auto;
+}
+
 .menu {
 	display: flex;
 	margin: 0;

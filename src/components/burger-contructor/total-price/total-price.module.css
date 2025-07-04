@@ -1,0 +1,11 @@
+.total-price {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 40px;
+	margin-top: auto;
+}
+
+.total-price__amount {
+	font-size: 48px;
+}

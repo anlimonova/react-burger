@@ -1,0 +1,25 @@
+.ingredient-item {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+
+	@media (hover: hover) {
+		&:hover {
+			.ingredient-item__image {
+				transform: scale(1.1);
+			}
+		}
+	}
+}
+
+.ingredient-item__image {
+	width: calc(100% - 32px);
+	transition: transform 0.2s ease-in-out;
+}
+
+.ingredient-item__name {
+	min-height: 48px;
+	text-align: center;
+}

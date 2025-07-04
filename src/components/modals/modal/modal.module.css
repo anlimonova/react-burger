@@ -1,0 +1,39 @@
+.modal-wrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.modal {
+	position: relative;
+	z-index: 1;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 720px;
+	background-color: #1c1c21;
+	border-radius: 16px;
+}
+
+.modal-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	max-width: 520px;
+	margin: auto;
+	text-align: center;
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.modal-close {
+	margin-left: auto;
+}
