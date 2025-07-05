@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './total-price.module.css';
-import * as PropTypes from 'prop-types';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Price } from '@components/ui/price/price.jsx';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,14 +10,22 @@ import { fetchOrderDetails } from '@/services/slices/orderSlice.js';
 import { selectedIngredientsSlice } from '@/services/slices/selectedIngredientsSlice.js';
 import { Preloader } from '@components/preloader/preloader.jsx';
 
-export const TotalPrice = ({ price }) => {
+export const TotalPrice = () => {
 	const dispatch = useDispatch();
 	const { modalType, modalData } = useSelector((state) => state.modal);
 	const { bun, ingredients } = useSelector(
 		(state) => state.selectedIngredients
 	);
-
 	const { loading } = useSelector((state) => state.order);
+
+	const totalPriceValue = useMemo(() => {
+		const bunPrice = bun ? bun.price * 2 : 0;
+		const ingredientsPrice = ingredients.reduce(
+			(sum, item) => sum + item.price,
+			0
+		);
+		return bunPrice + ingredientsPrice;
+	}, [bun, ingredients]);
 
 	const handleClick = async () => {
 		const ingredientIds = ingredients.map((item) => item._id);
@@ -42,7 +49,7 @@ export const TotalPrice = ({ price }) => {
 
 	return (
 		<section className={styles['total-price'] + ' pr-4'}>
-			<Price price={price} isLarge />
+			<Price price={totalPriceValue} isLarge />
 			<Button
 				htmlType='button'
 				type='primary'
@@ -59,8 +66,4 @@ export const TotalPrice = ({ price }) => {
 			{loading && <Preloader />}
 		</section>
 	);
-};
-
-TotalPrice.propTypes = {
-	price: PropTypes.number.isRequired,
 };

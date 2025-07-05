@@ -62,7 +62,7 @@ export const BurgerConstructor = () => {
 					/>
 				)}
 			</div>
-			<TotalPrice price={610} />
+			<TotalPrice />
 		</section>
 	);
 };
