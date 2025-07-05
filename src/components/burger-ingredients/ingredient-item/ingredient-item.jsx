@@ -1,32 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './ingredient-item.module.css';
 import { ingredientPropType } from '@utils/prop-types.js';
 import { Price } from '@components/ui/price/price.jsx';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
-import { Modal } from '@components/modals/modal/modal.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectedIngredientsSlice } from '@/services/slices/selectedIngredientsSlice.js';
+import { modalSlice } from '@/services/slices/modalSlice.js';
 
 export const IngredientItem = ({ ingredient }) => {
-	const [isIngredientModalOpen, setIngredientModalOpen] = useState(false);
-
+	const dispatch = useDispatch();
 	const { bun, ingredients } = useSelector(
 		(state) => state.selectedIngredients
 	);
 
-	// const handleIngredientOpenModal = () => {
-	// 	setIngredientModalOpen(true);
-	// };
-
-	const handleIngredientCloseModal = () => {
-		setIngredientModalOpen(false);
-	};
-
-	const dispatch = useDispatch();
-
 	const handleClick = () => {
-		// dispatch(openModal({ type: 'ingredient', data: ingredient }));
+		dispatch(
+			modalSlice.actions.openModal({
+				modalType: 'ingredient',
+				modalData: ingredient,
+			})
+		);
 		dispatch(selectedIngredientsSlice.actions.addIngredient(ingredient));
 	};
 
@@ -60,13 +53,6 @@ export const IngredientItem = ({ ingredient }) => {
 					{ingredient.name}
 				</span>
 			</button>
-			{isIngredientModalOpen && (
-				<Modal
-					title={'Детали ингредиента'}
-					onClose={handleIngredientCloseModal}>
-					<IngredientDetails ingredient={ingredient} />
-				</Modal>
-			)}
 		</>
 	);
 };

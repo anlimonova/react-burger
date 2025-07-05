@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
+const initialState = {
+	bun: null,
+	ingredients: [],
+};
+
 export const selectedIngredientsSlice = createSlice({
 	name: 'selectedIngredients',
-	initialState: {
-		bun: null,
-		ingredients: [],
-	},
+	initialState,
 	reducers: {
 		addIngredient: (state, action) => {
 			const ingredient = action.payload;
@@ -25,5 +27,6 @@ export const selectedIngredientsSlice = createSlice({
 				(item) => item.uuid !== action.payload
 			);
 		},
+		resetSelectedIngredients: () => initialState,
 	},
 });

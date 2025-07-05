@@ -6,14 +6,17 @@ import { AppHeader } from '@components/app-header/app-header.jsx';
 import { Preloader } from '@components/preloader/preloader.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
+import { modalSlice } from '@/services/slices/modalSlice.js';
+import { Modal } from '@components/modals/modal/modal.jsx';
+import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
 
 export const App = () => {
-	const ingredientsUrl = 'https://norma.nomoreparties.space/api/ingredients';
 	const dispatch = useDispatch();
 	const { ingredients, loading } = useSelector((state) => state.ingredients);
+	const { modalType, modalData } = useSelector((state) => state.modal);
 
 	useEffect(() => {
-		const promise = dispatch(fetchIngredients(ingredientsUrl));
+		const promise = dispatch(fetchIngredients());
 		return () => {
 			promise.abort();
 		};
@@ -38,6 +41,13 @@ export const App = () => {
 				<BurgerIngredients ingredients={ingredients} />
 				<BurgerConstructor />
 			</main>
+			{modalType === 'ingredient' && (
+				<Modal
+					title={'Детали ингредиента'}
+					onClose={() => dispatch(modalSlice.actions.closeModal())}>
+					<IngredientDetails ingredient={modalData} />
+				</Modal>
+			)}
 		</div>
 	);
 };

@@ -32,8 +32,8 @@ export const BurgerConstructor = () => {
 						styles.burger_constructor_filling + ' custom-scroll mt-4 mb-4'
 					}>
 					{ingredients.length > 0 &&
-						ingredients.map((item, index) => (
-							<li key={item._id + index} className={'pl-8'}>
+						ingredients.map((item) => (
+							<li key={item.uuid} className={'pl-8'}>
 								<button className={styles.ingredient_drag} type={'button'}>
 									<DragIcon type='primary' />
 								</button>
