@@ -9,6 +9,8 @@ import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
 import { modalSlice } from '@/services/slices/modalSlice.js';
 import { Modal } from '@components/modals/modal/modal.jsx';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export const App = () => {
 	const dispatch = useDispatch();
@@ -31,23 +33,25 @@ export const App = () => {
 	}
 
 	return (
-		<div className={styles.app}>
-			<AppHeader />
-			<h1
-				className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-				Соберите бургер
-			</h1>
-			<main className={`${styles.main} pl-5 pr-5`}>
-				<BurgerIngredients ingredients={ingredients} />
-				<BurgerConstructor />
-			</main>
-			{modalType === 'ingredient' && (
-				<Modal
-					title={'Детали ингредиента'}
-					onClose={() => dispatch(modalSlice.actions.closeModal())}>
-					<IngredientDetails ingredient={modalData} />
-				</Modal>
-			)}
-		</div>
+		<DndProvider backend={HTML5Backend}>
+			<div className={styles.app}>
+				<AppHeader />
+				<h1
+					className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
+					Соберите бургер
+				</h1>
+				<main className={`${styles.main} pl-5 pr-5`}>
+					<BurgerIngredients ingredients={ingredients} />
+					<BurgerConstructor />
+				</main>
+				{modalType === 'ingredient' && (
+					<Modal
+						title={'Детали ингредиента'}
+						onClose={() => dispatch(modalSlice.actions.closeModal())}>
+						<IngredientDetails ingredient={modalData} />
+					</Modal>
+				)}
+			</div>
+		</DndProvider>
 	);
 };

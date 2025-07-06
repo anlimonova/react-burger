@@ -28,5 +28,12 @@ export const selectedIngredientsSlice = createSlice({
 			);
 		},
 		resetSelectedIngredients: () => initialState,
+		reorderIngredients: (state, action) => {
+			const { fromIndex, toIndex } = action.payload;
+			const updated = [...state.ingredients];
+			const [moved] = updated.splice(fromIndex, 1);
+			updated.splice(toIndex, 0, moved);
+			state.ingredients = updated;
+		},
 	},
 });

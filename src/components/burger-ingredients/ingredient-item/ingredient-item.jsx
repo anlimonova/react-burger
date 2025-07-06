@@ -4,8 +4,8 @@ import { ingredientPropType } from '@utils/prop-types.js';
 import { Price } from '@components/ui/price/price.jsx';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectedIngredientsSlice } from '@/services/slices/selectedIngredientsSlice.js';
 import { modalSlice } from '@/services/slices/modalSlice.js';
+import { useDrag } from 'react-dnd';
 
 export const IngredientItem = ({ ingredient }) => {
 	const dispatch = useDispatch();
@@ -20,7 +20,6 @@ export const IngredientItem = ({ ingredient }) => {
 				modalData: ingredient,
 			})
 		);
-		dispatch(selectedIngredientsSlice.actions.addIngredient(ingredient));
 	};
 
 	let count = 0;
@@ -32,28 +31,41 @@ export const IngredientItem = ({ ingredient }) => {
 		count = ingredients.filter((item) => item._id === ingredient._id).length;
 	}
 
+	const isBunAlreadySelected =
+		ingredient.type === 'bun' && bun && bun._id === ingredient._id;
+
+	const [{ isDragging }, dragRef] = useDrag({
+		type: 'ingredient',
+		item: { id: ingredient._id, ingredient },
+		canDrag: !isBunAlreadySelected,
+		collect: (monitor) => ({
+			isDragging: monitor.isDragging(),
+		}),
+	});
+
 	return (
-		<>
-			<button
-				type={'button'}
-				className={styles['ingredient-item']}
-				onClick={handleClick}>
-				{count !== 0 && (
-					<Counter count={count} size='default' extraClass='m-1' />
-				)}
-				<img
-					className={styles['ingredient-item__image'] + ' ml-4 mr-4'}
-					src={ingredient.image_large}
-					alt={ingredient.name}></img>
-				<Price price={ingredient.price} />
-				<span
-					className={
-						styles['ingredient-item__name'] + ' text text_type_main-default'
-					}>
-					{ingredient.name}
-				</span>
-			</button>
-		</>
+		<button
+			type={'button'}
+			className={styles['ingredient-item']}
+			onClick={handleClick}
+			ref={dragRef}
+			style={{
+				opacity: isDragging ? 0.5 : 1,
+				cursor: isBunAlreadySelected ? 'not-allowed' : 'grab',
+			}}>
+			{count !== 0 && <Counter count={count} size='default' extraClass='m-1' />}
+			<img
+				className={styles['ingredient-item__image'] + ' ml-4 mr-4'}
+				src={ingredient.image_large}
+				alt={ingredient.name}></img>
+			<Price price={ingredient.price} />
+			<span
+				className={
+					styles['ingredient-item__name'] + ' text text_type_main-default'
+				}>
+				{ingredient.name}
+			</span>
+		</button>
 	);
 };
 
