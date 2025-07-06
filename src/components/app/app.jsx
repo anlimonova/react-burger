@@ -41,7 +41,7 @@ export const App = () => {
 					Соберите бургер
 				</h1>
 				<main className={`${styles.main} pl-5 pr-5`}>
-					<BurgerIngredients ingredients={ingredients} />
+					<BurgerIngredients />
 					<BurgerConstructor />
 				</main>
 				{modalType === 'ingredient' && (

@@ -10,17 +10,19 @@ export const selectedIngredientsSlice = createSlice({
 	name: 'selectedIngredients',
 	initialState,
 	reducers: {
-		addIngredient: (state, action) => {
-			const ingredient = action.payload;
+		addIngredient: {
+			reducer: (state, action) => {
+				const ingredient = action.payload;
 
-			if (ingredient.type === 'bun') {
-				state.bun = ingredient;
-			} else {
-				state.ingredients.push({
-					...ingredient,
-					uuid: uuidv4(),
-				});
-			}
+				if (ingredient.type === 'bun') {
+					state.bun = ingredient;
+				} else {
+					state.ingredients.push(ingredient);
+				}
+			},
+			prepare: (ingredient) => {
+				return { payload: { ...ingredient, uuid: uuidv4() } };
+			},
 		},
 		removeIngredient: (state, action) => {
 			state.ingredients = state.ingredients.filter(

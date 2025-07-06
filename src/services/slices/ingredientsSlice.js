@@ -1,17 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { INGREDIENTS_URL } from '@/constants/api.js';
+import { INGREDIENTS_ENDPOINT } from '@/constants/api.js';
+import { request } from '@utils/request.js';
 
 export const fetchIngredients = createAsyncThunk(
 	'ingredients/fetchIngredients',
 	async (_, thunkAPI) => {
 		try {
-			const response = await fetch(INGREDIENTS_URL, {
+			const data = await request(INGREDIENTS_ENDPOINT, {
 				signal: thunkAPI.signal,
 			});
-			if (!response.ok) {
-				throw new Error(`Ошибка HTTP: ${response.status}`);
-			}
-			const data = await response.json();
 			return data.data;
 		} catch (error) {
 			return thunkAPI.rejectWithValue(error.message);

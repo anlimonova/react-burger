@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
 import styles from './burger-ingredients.module.css';
-import * as PropTypes from 'prop-types';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ingredientPropType } from '@utils/prop-types.js';
 import { IngredientsGroup } from './ingredients-group/ingredients-group.jsx';
+import { useSelector } from 'react-redux';
 
-export const BurgerIngredients = ({ ingredients }) => {
+export const BurgerIngredients = () => {
+	const { ingredients } = useSelector((state) => state.ingredients);
+
 	const filterIngredientsByType = (type) => {
 		return ingredients.filter((ingredient) => ingredient.type === type);
 	};
@@ -82,8 +83,4 @@ export const BurgerIngredients = ({ ingredients }) => {
 			</div>
 		</section>
 	);
-};
-
-BurgerIngredients.propTypes = {
-	ingredients: PropTypes.arrayOf(ingredientPropType.isRequired).isRequired,
 };
