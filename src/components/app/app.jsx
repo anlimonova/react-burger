@@ -1,49 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styles from './app.module.css';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients.jsx';
 import { BurgerConstructor } from '@components/burger-contructor/burger-constructor.jsx';
 import { AppHeader } from '@components/app-header/app-header.jsx';
 import { Preloader } from '@components/preloader/preloader.jsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
+import { modalSlice } from '@/services/slices/modalSlice.js';
+import { Modal } from '@components/modals/modal/modal.jsx';
+import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export const App = () => {
-	const ingredientsUrl = 'https://norma.nomoreparties.space/api/ingredients';
-
-	const [state, setState] = useState({
-		ingredients: null,
-		loading: true,
-	});
+	const dispatch = useDispatch();
+	const { ingredients, loading } = useSelector((state) => state.ingredients);
+	const { modalType, modalData } = useSelector((state) => state.modal);
 
 	useEffect(() => {
-		const controller = new AbortController();
-
-		const getProductData = async () => {
-			try {
-				setState((prev) => ({ ...prev, loading: true }));
-
-				const response = await fetch(ingredientsUrl, {
-					signal: controller.signal,
-				});
-				if (!response.ok) {
-					throw new Error(`Ошибка HTTP: ${response.status}`);
-				}
-
-				const json = await response.json();
-				setState({ ingredients: json.data, loading: false });
-			} catch (error) {
-				if (error.name !== 'AbortError') {
-					console.error('Ошибка при загрузке данных по ингредиентам:', error);
-					setState((prev) => ({ ...prev, loading: false }));
-				}
-			}
-		};
-		getProductData();
-
+		const promise = dispatch(fetchIngredients());
 		return () => {
-			controller.abort();
+			promise.abort();
 		};
-	}, []);
+	}, [dispatch]);
 
-	if (state.loading) {
+	if (loading || ingredients.length === 0) {
 		return (
 			<div className={styles.app}>
 				<Preloader />;
@@ -52,16 +33,25 @@ export const App = () => {
 	}
 
 	return (
-		<div className={styles.app}>
-			<AppHeader />
-			<h1
-				className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-				Соберите бургер
-			</h1>
-			<main className={`${styles.main} pl-5 pr-5`}>
-				<BurgerIngredients ingredients={state.ingredients} />
-				<BurgerConstructor ingredients={state.ingredients} />
-			</main>
-		</div>
+		<DndProvider backend={HTML5Backend}>
+			<div className={styles.app}>
+				<AppHeader />
+				<h1
+					className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
+					Соберите бургер
+				</h1>
+				<main className={`${styles.main} pl-5 pr-5`}>
+					<BurgerIngredients />
+					<BurgerConstructor />
+				</main>
+				{modalType === 'ingredient' && (
+					<Modal
+						title={'Детали ингредиента'}
+						onClose={() => dispatch(modalSlice.actions.closeModal())}>
+						<IngredientDetails ingredient={modalData} />
+					</Modal>
+				)}
+			</div>
+		</DndProvider>
 	);
 };
