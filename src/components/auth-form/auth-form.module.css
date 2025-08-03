@@ -15,10 +15,11 @@
 
 .links span {
 	display: block;
+	color: #8585AD;
 	text-align: center;
 }
 
 .links a {
-	color: #4C4CFF;
+	color: #4c4cff;
 	text-decoration: none;
 }

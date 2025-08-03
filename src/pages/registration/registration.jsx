@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { AuthForm } from '@components/auth-form/auth-form.jsx';
 
-export const Login = () => {
+export const Registration = () => {
+	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
 	const inputs = [
+		{
+			type: 'text',
+			placeholder: 'Имя',
+			onChange: (e) => setName(e.target.value),
+			name: 'name',
+			value: name,
+		},
 		{
 			type: 'text',
 			placeholder: 'E-mail',
@@ -24,18 +32,18 @@ export const Login = () => {
 
 	const links = [
 		{
-			text: 'Вы — новый пользователь?',
-			label: 'Зарегистрироваться',
-			href: './registration',
-		},
-		{
-			text: 'Забыли пароль?',
-			label: 'Восстановить пароль',
-			href: './forgot-password',
+			text: 'Уже зарегистрированы?',
+			label: 'Войти',
+			href: './login',
 		},
 	];
 
 	return (
-		<AuthForm title='Вход' inputs={inputs} buttonText='Войти' links={links} />
+		<AuthForm
+			title='Регистрация'
+			inputs={inputs}
+			buttonText='Зарегистрироваться'
+			links={links}
+		/>
 	);
 };
