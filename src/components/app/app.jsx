@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import styles from './app.module.css';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients.jsx';
-import { BurgerConstructor } from '@components/burger-contructor/burger-constructor.jsx';
 import { AppHeader } from '@components/app-header/app-header.jsx';
 import { Preloader } from '@components/preloader/preloader.jsx';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +7,11 @@ import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
 import { modalSlice } from '@/services/slices/modalSlice.js';
 import { Modal } from '@components/modals/modal/modal.jsx';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
+import { Home } from '@pages/home/home.jsx';
+import { Login } from '@pages/login/login.jsx';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Routes, Route } from 'react-router-dom';
 
 export const App = () => {
 	const dispatch = useDispatch();
@@ -36,13 +37,11 @@ export const App = () => {
 		<DndProvider backend={HTML5Backend}>
 			<div className={styles.app}>
 				<AppHeader />
-				<h1
-					className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-					Соберите бургер
-				</h1>
 				<main className={`${styles.main} pl-5 pr-5`}>
-					<BurgerIngredients />
-					<BurgerConstructor />
+					<Routes>
+						<Route path='/home' element={<Home />}></Route>
+						<Route path='/login' element={<Login />}></Route>
+					</Routes>
 				</main>
 				{modalType === 'ingredient' && (
 					<Modal
