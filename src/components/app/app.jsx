@@ -13,6 +13,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Routes, Route } from 'react-router-dom';
 import { Registration } from '@pages/registration/registration.jsx';
+import {PasswordRecovery} from "@pages/password-recovery/password-recovery.jsx";
 
 export const App = () => {
 	const dispatch = useDispatch();
@@ -43,6 +44,7 @@ export const App = () => {
 						<Route path='/home' element={<Home />}></Route>
 						<Route path='/login' element={<Login />}></Route>
 						<Route path='/registration' element={<Registration />}></Route>
+						<Route path='/password-recovery' element={<PasswordRecovery />}></Route>
 					</Routes>
 				</main>
 				{modalType === 'ingredient' && (

@@ -31,7 +31,7 @@ export const Login = () => {
 		{
 			text: 'Забыли пароль?',
 			label: 'Восстановить пароль',
-			href: './forgot-password',
+			href: './password-recovery',
 		},
 	];
 
