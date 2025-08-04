@@ -6,6 +6,10 @@
 	margin-top: min(180px, 22.5vh);
 }
 
+.centered.inside {
+	margin-top: 0;
+}
+
 .form {
 	display: flex;
 	flex-direction: column;

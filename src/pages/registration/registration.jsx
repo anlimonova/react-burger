@@ -15,7 +15,7 @@ export const Registration = () => {
 			value: name,
 		},
 		{
-			type: 'text',
+			type: 'email',
 			placeholder: 'E-mail',
 			onChange: (e) => setEmail(e.target.value),
 			name: 'email',

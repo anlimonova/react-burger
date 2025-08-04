@@ -7,7 +7,7 @@ export const Login = () => {
 
 	const inputs = [
 		{
-			type: 'text',
+			type: 'email',
 			placeholder: 'E-mail',
 			onChange: (e) => setEmail(e.target.value),
 			name: 'email',
