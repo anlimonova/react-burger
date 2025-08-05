@@ -42,19 +42,15 @@ export const Profile = () => {
 			<nav className={styles.navigation + ' text text_type_main-medium mr-15'}>
 				<ul>
 					<li>
-						<a href='#' className={`${styles.link_active}`}>
+						<a href='/' className={`${styles.link_active}`}>
 							Профиль
 						</a>
 					</li>
 					<li>
-						<a href='#'>
-							История заказов
-						</a>
+						<a href='/'>История заказов</a>
 					</li>
 					<li>
-						<a href='#'>
-							Выход
-						</a>
+						<a href='/'>Выход</a>
 					</li>
 				</ul>
 				<span className={styles.note + ' text text_type_main-default mt-20'}>

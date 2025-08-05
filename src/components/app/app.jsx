@@ -1,64 +1,60 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styles from './app.module.css';
 import { AppHeader } from '@components/app-header/app-header.jsx';
-import { Preloader } from '@components/preloader/preloader.jsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
-import { modalSlice } from '@/services/slices/modalSlice.js';
-import { Modal } from '@components/modals/modal/modal.jsx';
-import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
 import { Home } from '@pages/home/home.jsx';
 import { Login } from '@pages/login/login.jsx';
 import { Profile } from '@pages/profile/profile.jsx';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Registration } from '@pages/registration/registration.jsx';
 import { PasswordRecovery } from '@pages/password-recovery/password-recovery.jsx';
+import { modalSlice } from '@/services/slices/modalSlice.js';
+import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
+import { Modal } from '@components/modals/modal/modal.jsx';
+import { useDispatch } from 'react-redux';
 
 export const App = () => {
+	const location = useLocation();
+	const navigate = useNavigate();
+	const background = location.state && location.state.background;
 	const dispatch = useDispatch();
-	const { ingredients, loading } = useSelector((state) => state.ingredients);
-	const { modalType, modalData } = useSelector((state) => state.modal);
 
-	useEffect(() => {
-		const promise = dispatch(fetchIngredients());
-		return () => {
-			promise.abort();
-		};
-	}, [dispatch]);
-
-	if (loading || ingredients.length === 0) {
-		return (
-			<div className={styles.app}>
-				<Preloader />;
-			</div>
-		);
-	}
+	const handleModalClose = () => {
+		dispatch(modalSlice.actions.closeModal());
+		navigate(-1);
+	};
 
 	return (
-		<DndProvider backend={HTML5Backend}>
-			<div className={styles.app}>
-				<AppHeader />
-				<main className={`${styles.main} pl-5 pr-5`}>
+		<div className={styles.app}>
+			<AppHeader />
+			<main className={`${styles.main} pl-5 pr-5`}>
+				<Routes location={background || location}>
+					<Route path='/' element={<Home />}></Route>
+					<Route
+						path='/ingredients/:ingredientId'
+						element={<IngredientDetails />}
+					/>
+					<Route path='/login' element={<Login />}></Route>
+					<Route path='/registration' element={<Registration />}></Route>
+					<Route
+						path='/password-recovery'
+						element={<PasswordRecovery />}></Route>
+					<Route path='/profile' element={<Profile />}></Route>
+					{/*<Route path='*' element={<NotFound404 />} />*/}
+				</Routes>
+
+				{background && (
 					<Routes>
-						<Route path='/home' element={<Home />}></Route>
-						<Route path='/login' element={<Login />}></Route>
-						<Route path='/registration' element={<Registration />}></Route>
 						<Route
-							path='/password-recovery'
-							element={<PasswordRecovery />}></Route>
-						<Route path='/profile' element={<Profile />}></Route>
+							path='/ingredients/:ingredientId'
+							element={
+								<Modal title='Детали ингредиента' onClose={handleModalClose}>
+									<IngredientDetails modal />
+								</Modal>
+							}
+						/>
 					</Routes>
-				</main>
-				{modalType === 'ingredient' && (
-					<Modal
-						title={'Детали ингредиента'}
-						onClose={() => dispatch(modalSlice.actions.closeModal())}>
-						<IngredientDetails ingredient={modalData} />
-					</Modal>
 				)}
-			</div>
-		</DndProvider>
+			</main>
+		</div>
 	);
 };

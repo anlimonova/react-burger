@@ -1,3 +1,11 @@
+.app {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	color: var(--text-primary-color);
+	background-color: var(--background-alt);
+}
+
 .title {
 	align-self: center;
 	width: 100%;
