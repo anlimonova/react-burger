@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AuthForm } from '@components/auth-form/auth-form.jsx';
 
-export const PasswordRecovery = () => {
+export const ResetPassword = () => {
 	const [email, setEmail] = useState('');
 	const [code, setCode] = useState('');
 	const [password, setPassword] = useState('');

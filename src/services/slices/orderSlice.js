@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ORDER_ENDPOINT } from '@/constants/api.js';
-import { request } from '@utils/request.js';
+import { API } from '@utils/api.js';
 
 export const fetchOrderDetails = createAsyncThunk(
 	'order/fetchOrderDetails',
@@ -10,15 +9,7 @@ export const fetchOrderDetails = createAsyncThunk(
 	 */
 	async (ingredientIds, thunkAPI) => {
 		try {
-			const data = await request(ORDER_ENDPOINT, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					ingredients: ingredientIds,
-				}),
-			});
+			const data = await API.orderDetails(ingredientIds);
 			return data;
 		} catch (error) {
 			return thunkAPI.rejectWithValue(error.message);

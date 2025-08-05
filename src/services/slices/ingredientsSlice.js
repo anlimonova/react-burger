@@ -1,17 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { INGREDIENTS_ENDPOINT } from '@/constants/api.js';
-import { request } from '@utils/request.js';
+import { API } from '@utils/api.js';
 
 export const fetchIngredients = createAsyncThunk(
 	'ingredients/fetchIngredients',
-	async (_, thunkAPI) => {
+	async (_, { signal }) => {
 		try {
-			const data = await request(INGREDIENTS_ENDPOINT, {
-				signal: thunkAPI.signal,
-			});
+			const data = await API.getIngredients(signal);
 			return data.data;
 		} catch (error) {
-			return thunkAPI.rejectWithValue(error.message);
+			throw new Error(error.message || 'Failed to fetch ingredients');
 		}
 	}
 );
