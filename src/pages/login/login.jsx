@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
 import { AuthForm } from '@components/auth-form/auth-form.jsx';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '@/services/slices/userSlice';
 
 export const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+
+	const dispatch = useDispatch();
+
+	const handleClick = () => {
+		dispatch(loginUser({ email, password }));
+	};
 
 	const inputs = [
 		{
@@ -31,11 +39,17 @@ export const Login = () => {
 		{
 			text: 'Забыли пароль?',
 			label: 'Восстановить пароль',
-			href: './password-recovery',
+			href: './forgot-password',
 		},
 	];
 
 	return (
-		<AuthForm title='Вход' inputs={inputs} buttonText='Войти' links={links} />
+		<AuthForm
+			title='Вход'
+			inputs={inputs}
+			buttonText='Войти'
+			handleButtonClick={handleClick}
+			links={links}
+		/>
 	);
 };

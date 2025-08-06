@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './app.module.css';
 import { AppHeader } from '@components/app-header/app-header.jsx';
 import { Home } from '@pages/home/home.jsx';
@@ -12,12 +12,21 @@ import { modalSlice } from '@/services/slices/modalSlice.js';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
 import { Modal } from '@components/modals/modal/modal.jsx';
 import { useDispatch } from 'react-redux';
+import {
+	OnlyAuth,
+	OnlyUnAuth,
+} from '@components/protected-route/protected-route.jsx';
+import { checkAuth } from '@/services/slices/userSlice';
 
 export const App = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const background = location.state && location.state.background;
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(checkAuth());
+	}, [dispatch]);
 
 	const handleModalClose = () => {
 		dispatch(modalSlice.actions.closeModal());
@@ -34,11 +43,21 @@ export const App = () => {
 						path='/ingredients/:ingredientId'
 						element={<IngredientDetails />}
 					/>
-					<Route path='/login' element={<Login />}></Route>
-					<Route path='/registration' element={<Registration />}></Route>
-					<Route path='/forgot-password' element={<ForgotPassword />}></Route>
-					<Route path='/reset-password' element={<ResetPassword />}></Route>
-					<Route path='/profile' element={<Profile />}></Route>
+					<Route
+						path='/login'
+						element={<OnlyUnAuth component={<Login />} />}></Route>
+					<Route
+						path='/registration'
+						element={<OnlyUnAuth component={<Registration />} />}></Route>
+					<Route
+						path='/forgot-password'
+						element={<OnlyUnAuth component={<ForgotPassword />} />}></Route>
+					<Route
+						path='/reset-password'
+						element={<OnlyUnAuth component={<ResetPassword />} />}></Route>
+					<Route
+						path='/profile'
+						element={<OnlyAuth component={<Profile />} />}></Route>
 					{/*<Route path='*' element={<NotFound404 />} />*/}
 				</Routes>
 

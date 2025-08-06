@@ -5,11 +5,12 @@ export const API = {
 	getIngredients: (signal) => request('/ingredients', { signal }),
 
 	// Отправка данных заказа
-	orderDetails: (ingredientIds) =>
+	orderDetails: (ingredientIds, accessToken) =>
 		request('/orders', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				...(accessToken && { Authorization: accessToken }),
 			},
 			body: JSON.stringify({ ingredients: ingredientIds }),
 		}),

@@ -9,8 +9,7 @@ export const fetchOrderDetails = createAsyncThunk(
 	 */
 	async (ingredientIds, thunkAPI) => {
 		try {
-			const data = await API.orderDetails(ingredientIds);
-			return data;
+			return await API.orderDetails(ingredientIds);
 		} catch (error) {
 			return thunkAPI.rejectWithValue(error.message);
 		}
