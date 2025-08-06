@@ -49,10 +49,6 @@ export const userSlice = createSlice({
 			state.isAuthChecked = action.payload;
 		},
 	},
-	selectors: {
-		getUser: (state) => state.user,
-		getIsAuthChecked: (state) => state.isAuthChecked,
-	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(loginUser.pending, (state) => {
@@ -88,7 +84,10 @@ export const checkAuth = createAsyncThunk(
 			const accessToken = localStorage.getItem('accessToken');
 			const refreshToken = localStorage.getItem('refreshToken');
 
-			if (!accessToken) throw new Error('Нет токена');
+			if (!accessToken) {
+				dispatch(setIsAuthChecked(true));
+				return;
+			}
 
 			const { user, accessToken: newAccessToken } = await verifyToken(
 				accessToken,
@@ -108,5 +107,5 @@ export const checkAuth = createAsyncThunk(
 	}
 );
 
-export const { getUser, getIsAuthChecked } = userSlice.selectors;
+export const getUser = (state) => state.user.user;
 export const { setUser, setIsAuthChecked } = userSlice.actions;

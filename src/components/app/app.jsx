@@ -3,7 +3,7 @@ import styles from './app.module.css';
 import { AppHeader } from '@components/app-header/app-header.jsx';
 import { Home } from '@pages/home/home.jsx';
 import { Login } from '@pages/login/login.jsx';
-import { Profile } from '@pages/profile/profile.jsx';
+import { Profile } from '@pages/profile-layout/profile/profile.jsx';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Registration } from '@pages/registration/registration.jsx';
 import { ForgotPassword } from '@pages/forgot-password/forgot-password.jsx';
@@ -17,6 +17,7 @@ import {
 	OnlyUnAuth,
 } from '@components/protected-route/protected-route.jsx';
 import { checkAuth } from '@/services/slices/userSlice';
+import { ProfileLayout } from '@pages/profile-layout/profile-layout.jsx';
 
 export const App = () => {
 	const location = useLocation();
@@ -56,8 +57,12 @@ export const App = () => {
 						path='/reset-password'
 						element={<OnlyUnAuth component={<ResetPassword />} />}></Route>
 					<Route
-						path='/profile'
-						element={<OnlyAuth component={<Profile />} />}></Route>
+						path='profile'
+						element={<OnlyAuth component={<ProfileLayout />} />}>
+						<Route index element={<Profile />} />
+						{/*<Route path='orders' element={<OrdersHistory />} />*/}
+						{/*<Route path='orders/:number' element={<OrderDetails />} />*/}
+					</Route>
 					{/*<Route path='*' element={<NotFound404 />} />*/}
 				</Routes>
 

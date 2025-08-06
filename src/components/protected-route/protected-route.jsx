@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth.js';
+import { useSelector } from 'react-redux';
 
 export const ProtectedRoute = ({ onlyUnAuth = false, component }) => {
 	const location = useLocation();
-	const { user, isAuthChecked } = useAuth();
+	const { user, isAuthChecked } = useSelector((store) => store.user);
 
 	if (!isAuthChecked) {
 		return <div>Загрузка...</div>;
