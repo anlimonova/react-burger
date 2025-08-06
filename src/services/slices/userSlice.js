@@ -25,6 +25,19 @@ export const logoutUser = createAsyncThunk(
 	}
 );
 
+export const registerUser = createAsyncThunk(
+	'user/register',
+	async ({ name, email, password }, thunkAPI) => {
+		try {
+			return await API.register(name, email, password);
+		} catch (error) {
+			return thunkAPI.rejectWithValue(
+				error.message || 'Ошибка при регистрации'
+			);
+		}
+	}
+);
+
 export const userSlice = createSlice({
 	name: 'user',
 	initialState,
@@ -58,6 +71,12 @@ export const userSlice = createSlice({
 				state.user = null;
 				localStorage.removeItem('accessToken');
 				localStorage.removeItem('refreshToken');
+			})
+			.addCase(registerUser.fulfilled, (state, action) => {
+				state.user = action.payload.user;
+				state.isAuthChecked = true;
+				localStorage.setItem('accessToken', action.payload.accessToken);
+				localStorage.setItem('refreshToken', action.payload.refreshToken);
 			});
 	},
 });

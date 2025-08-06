@@ -1,10 +1,10 @@
 import React from 'react';
-import styles from './auth-form.module.css';
 import {
 	Button,
 	Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useTogglePassword } from '@/hooks/useTogglePassword.js';
+import styles from './auth-form.module.css';
 import * as PropTypes from 'prop-types';
 
 export const AuthForm = ({
@@ -45,7 +45,7 @@ export const AuthForm = ({
 				))}
 				{buttonText && (
 					<Button
-						htmlType={buttonType || 'submit'}
+						htmlType={buttonType || 'button'}
 						type='primary'
 						size='medium'
 						onClick={handleButtonClick}>

@@ -9,9 +9,13 @@ import { OrderDetails } from '@components/modals/order-details/order-details.jsx
 import { fetchOrderDetails } from '@/services/slices/orderSlice.js';
 import { selectedIngredientsSlice } from '@/services/slices/selectedIngredientsSlice.js';
 import { Preloader } from '@components/preloader/preloader.jsx';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 export const TotalPrice = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { user } = useAuth();
 	const { modalType, modalData } = useSelector((state) => state.modal);
 	const { bun, ingredients } = useSelector(
 		(state) => state.selectedIngredients
@@ -28,6 +32,11 @@ export const TotalPrice = () => {
 	}, [bun, ingredients]);
 
 	const handleClick = async () => {
+		if (!user) {
+			navigate('/login');
+			return;
+		}
+
 		const ingredientIds = ingredients.map((item) => item._id);
 		if (bun) {
 			ingredientIds.unshift(bun._id);

@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
+import {
+	saveToSession,
+	loadFromSession,
+	SELECTED_INGREDIENTS_KEY,
+} from '@/utils/session';
 
-const initialState = {
+const initialState = loadFromSession(SELECTED_INGREDIENTS_KEY) || {
 	bun: null,
 	ingredients: [],
 };
@@ -19,6 +24,8 @@ export const selectedIngredientsSlice = createSlice({
 				} else {
 					state.ingredients.push(ingredient);
 				}
+
+				saveToSession(state);
 			},
 			prepare: (ingredient) => {
 				return { payload: { ...ingredient, uuid: uuidv4() } };
@@ -28,14 +35,20 @@ export const selectedIngredientsSlice = createSlice({
 			state.ingredients = state.ingredients.filter(
 				(item) => item.uuid !== action.payload
 			);
+			saveToSession(state);
 		},
-		resetSelectedIngredients: () => initialState,
+		resetSelectedIngredients: (state) => {
+			state.bun = null;
+			state.ingredients = [];
+			saveToSession(state);
+		},
 		reorderIngredients: (state, action) => {
 			const { fromIndex, toIndex } = action.payload;
 			const updated = [...state.ingredients];
 			const [moved] = updated.splice(fromIndex, 1);
 			updated.splice(toIndex, 0, moved);
 			state.ingredients = updated;
+			saveToSession(state);
 		},
 	},
 });
