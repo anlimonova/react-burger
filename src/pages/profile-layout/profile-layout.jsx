@@ -7,7 +7,8 @@ export const ProfileLayout = () => {
 	const dispatch = useDispatch();
 
 	const handleClick = () => {
-		dispatch(logoutUser());
+		const refreshToken = localStorage.getItem('refreshToken');
+		dispatch(logoutUser(refreshToken));
 	};
 
 	return (
@@ -34,9 +35,7 @@ export const ProfileLayout = () => {
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to='/' onClick={handleClick}>
-							Выход
-						</NavLink>
+						<button onClick={handleClick}>Выход</button>
 					</li>
 				</ul>
 				<span className={styles.note + ' text text_type_main-default mt-20'}>

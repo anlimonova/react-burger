@@ -20,6 +20,10 @@
 	color: var(--text-primary-color);
 }
 
+.navigation button {
+	color: #8585ad;
+}
+
 .note {
 	color: #404053;
 }

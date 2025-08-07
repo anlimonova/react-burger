@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { AuthForm } from '@components/auth-form/auth-form.jsx';
-import { useDispatch } from 'react-redux';
 import { loginUser } from '@/services/slices/userSlice';
+import { useAuthSubmit } from '@/hooks/useAuthSubmit';
 
 export const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const dispatch = useDispatch();
-
-	const handleClick = () => {
-		dispatch(loginUser({ email, password }));
-	};
+	const action = () => loginUser({ email, password });
+	const handleClick = useAuthSubmit(action);
 
 	const inputs = [
 		{
