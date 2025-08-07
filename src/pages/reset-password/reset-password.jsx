@@ -1,21 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthForm } from '@components/auth-form/auth-form.jsx';
+import { useNavigate } from 'react-router-dom';
+import { API } from '@utils/api.js';
 
 export const ResetPassword = () => {
-	const [email, setEmail] = useState('');
 	const [code, setCode] = useState('');
 	const [password, setPassword] = useState('');
-	const [userExist, setUserExist] = useState(false);
+	const navigate = useNavigate();
 
-	const firstInputs = [
-		{
-			type: 'email',
-			placeholder: 'Укажите e-mail',
-			onChange: (e) => setEmail(e.target.value),
-			name: 'email',
-			value: email,
-		},
-	];
+	useEffect(() => {
+		const isInitiated = localStorage.getItem('isPasswordResetInitiated');
+		if (!isInitiated) {
+			navigate('/forgot-password');
+		}
+		return () => {
+			localStorage.removeItem('isPasswordResetInitiated');
+		};
+	}, [navigate]);
+
+	const handleSubmit = async () => {
+		try {
+			await API.passwordResetConfirm(password, code);
+			localStorage.removeItem('isPasswordResetInitiated');
+			navigate('/login');
+		} catch (error) {
+			console.error('Ошибка при сбросе пароля:', error.message);
+		}
+	};
 
 	const secondInputs = [
 		{
@@ -42,25 +53,12 @@ export const ResetPassword = () => {
 		},
 	];
 
-	return userExist ? (
+	return (
 		<AuthForm
 			title='Восстановление пароля'
 			inputs={secondInputs}
 			buttonText='Сохранить'
-			handleButtonClick={() => {
-				setUserExist(false);
-			}}
-			buttonType={'button'}
-			links={links}
-		/>
-	) : (
-		<AuthForm
-			title='Восстановление пароля'
-			inputs={firstInputs}
-			buttonText='Восстановить'
-			handleButtonClick={() => {
-				setUserExist(true);
-			}}
+			handleButtonClick={handleSubmit}
 			buttonType={'button'}
 			links={links}
 		/>

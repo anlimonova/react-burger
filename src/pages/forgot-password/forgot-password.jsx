@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import { AuthForm } from '@components/auth-form/auth-form.jsx';
+import { useNavigate } from 'react-router-dom';
+import { API } from '@utils/api.js';
 
 export const ForgotPassword = () => {
 	const [email, setEmail] = useState('');
-	const [code, setCode] = useState('');
-	const [password, setPassword] = useState('');
-	const [userExist, setUserExist] = useState(false);
+	const navigate = useNavigate();
+
+	const handleSubmit = async () => {
+		try {
+			await API.passwordReset(email);
+			localStorage.setItem('isPasswordResetInitiated', 'true');
+			navigate('/reset-password');
+		} catch (error) {
+			console.error('Ошибка при отправке email:', error.message);
+		}
+	};
 
 	const firstInputs = [
 		{
@@ -17,23 +27,6 @@ export const ForgotPassword = () => {
 		},
 	];
 
-	const secondInputs = [
-		{
-			type: 'password',
-			placeholder: 'Введите новый пароль',
-			onChange: (e) => setPassword(e.target.value),
-			name: 'password',
-			value: password,
-		},
-		{
-			type: 'text',
-			placeholder: 'Введите код из письма',
-			onChange: (e) => setCode(e.target.value),
-			name: 'code',
-			value: code,
-		},
-	];
-
 	const links = [
 		{
 			text: 'Вспомнили пароль?',
@@ -42,25 +35,12 @@ export const ForgotPassword = () => {
 		},
 	];
 
-	return userExist ? (
-		<AuthForm
-			title='Восстановление пароля'
-			inputs={secondInputs}
-			buttonText='Сохранить'
-			handleButtonClick={() => {
-				setUserExist(false);
-			}}
-			buttonType={'button'}
-			links={links}
-		/>
-	) : (
+	return (
 		<AuthForm
 			title='Восстановление пароля'
 			inputs={firstInputs}
 			buttonText='Восстановить'
-			handleButtonClick={() => {
-				setUserExist(true);
-			}}
+			handleButtonClick={handleSubmit}
 			buttonType={'button'}
 			links={links}
 		/>
