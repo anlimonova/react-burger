@@ -6,7 +6,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
-import { Preloader } from '@components/preloader/preloader.jsx';
+import { PageOverlay } from '@components/page-overlay/page-overlay.jsx';
 
 export const Home = () => {
 	const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export const Home = () => {
 	if (loading || ingredients.length === 0) {
 		return (
 			<div className={styles.app}>
-				<Preloader />
+				<PageOverlay />
 			</div>
 		);
 	}

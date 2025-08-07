@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import styles from './ingredient-details.module.css';
-import { Preloader } from '@components/preloader/preloader.jsx';
 import { NumberInfo } from '@components/ui/number-info/number-info.jsx';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
 import * as PropTypes from 'prop-types';
+import { PageOverlay } from '@components/page-overlay/page-overlay.jsx';
 
 export const IngredientDetails = ({ modal = false }) => {
 	const { ingredientId } = useParams();
@@ -22,7 +22,7 @@ export const IngredientDetails = ({ modal = false }) => {
 	const ingredient =
 		modalData || ingredients.find((ing) => ing._id === ingredientId);
 
-	if (loading) return <Preloader />;
+	if (loading) return <PageOverlay />;
 	if (!ingredient)
 		return (
 			<div className='text text_type_main-default'>Ингредиент не найден</div>

@@ -7,9 +7,9 @@ export const fetchOrderDetails = createAsyncThunk(
 	 * @param {string[]} ingredientIds
 	 * @param {object} thunkAPI
 	 */
-	async (ingredientIds, thunkAPI) => {
+	async ({ ingredientIds, accessToken }, thunkAPI) => {
 		try {
-			return await API.orderDetails(ingredientIds);
+			return await API.orderDetails(ingredientIds, accessToken);
 		} catch (error) {
 			return thunkAPI.rejectWithValue(error.message);
 		}

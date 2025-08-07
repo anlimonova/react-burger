@@ -1,13 +1,14 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { PageOverlay } from '@components/page-overlay/page-overlay.jsx';
 
 export const ProtectedRoute = ({ onlyUnAuth = false, component }) => {
 	const location = useLocation();
 	const { user, isAuthChecked } = useSelector((store) => store.user);
 
 	if (!isAuthChecked) {
-		return <div>Загрузка...</div>;
+		return <PageOverlay />;
 	}
 
 	if (!onlyUnAuth && !user) {
