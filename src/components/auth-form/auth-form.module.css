@@ -27,3 +27,10 @@
 	color: #4c4cff;
 	text-decoration: none;
 }
+
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+}

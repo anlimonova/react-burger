@@ -18,6 +18,8 @@ import {
 } from '@components/protected-route/protected-route.jsx';
 import { checkAuth } from '@/services/slices/userSlice';
 import { ProfileLayout } from '@pages/profile-layout/profile-layout.jsx';
+import { NotFound404 } from '@pages/not-found-404/not-found-404.jsx';
+import { OrdersHistory } from '@pages/orders-history/orders-history.jsx';
 
 export const App = () => {
 	const location = useLocation();
@@ -26,7 +28,10 @@ export const App = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(checkAuth());
+		const promise = dispatch(checkAuth());
+		return () => {
+			promise.abort();
+		};
 	}, [dispatch]);
 
 	const handleModalClose = () => {
@@ -60,10 +65,10 @@ export const App = () => {
 						path='profile'
 						element={<OnlyAuth component={<ProfileLayout />} />}>
 						<Route index element={<Profile />} />
-						{/*<Route path='orders' element={<OrdersHistory />} />*/}
+						<Route path='orders' element={<OrdersHistory />} />
 						{/*<Route path='orders/:number' element={<OrderDetails />} />*/}
 					</Route>
-					{/*<Route path='*' element={<NotFound404 />} />*/}
+					<Route path='*' element={<NotFound404 />} />
 				</Routes>
 
 				{background && (

@@ -39,7 +39,7 @@ export const Registration = () => {
 		{
 			text: 'Уже зарегистрированы?',
 			label: 'Войти',
-			href: './login',
+			href: '/login',
 		},
 	];
 
@@ -47,7 +47,7 @@ export const Registration = () => {
 		<AuthForm
 			title='Регистрация'
 			inputs={inputs}
-			buttonText='Зарегистрироваться'
+			mainButtonText='Зарегистрироваться'
 			handleButtonClick={handleClick}
 			links={links}
 		/>

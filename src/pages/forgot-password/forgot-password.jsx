@@ -31,7 +31,7 @@ export const ForgotPassword = () => {
 		{
 			text: 'Вспомнили пароль?',
 			label: 'Войти',
-			href: './login',
+			href: '/login',
 		},
 	];
 
@@ -39,7 +39,7 @@ export const ForgotPassword = () => {
 		<AuthForm
 			title='Восстановление пароля'
 			inputs={firstInputs}
-			buttonText='Восстановить'
+			mainButtonText='Восстановить'
 			handleButtonClick={handleSubmit}
 			buttonType={'button'}
 			links={links}

@@ -6,8 +6,14 @@ import {
 	Logo,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 export const AppHeader = () => {
+	const { user } = useSelector((store) => store.user);
+
+	useEffect(() => {}, [user]);
+
 	return (
 		<header className={styles.header}>
 			<nav className={`${styles.menu} p-4`}>
@@ -50,7 +56,9 @@ export const AppHeader = () => {
 					{({ isActive }) => (
 						<>
 							<ProfileIcon type={isActive ? 'primary' : 'secondary'} />
-							<p className='text text_type_main-default ml-2'>Личный кабинет</p>
+							<p className='text text_type_main-default ml-2'>
+								{(user && user.name) || 'Личный кабинет'}
+							</p>
 						</>
 					)}
 				</NavLink>

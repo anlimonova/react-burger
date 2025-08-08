@@ -1,12 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthForm } from '@components/auth-form/auth-form.jsx';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkAuth, setUser } from '@/services/slices/userSlice.js';
+import { API } from '@utils/api.js';
 
 export const Profile = () => {
 	const { user } = useSelector((store) => store.user);
-	const [name, setName] = useState(user.name);
-	const [login, setLogin] = useState(user.email);
+	const dispatch = useDispatch();
+	const accessToken = localStorage.getItem('accessToken');
+
+	const [name, setName] = useState('');
+	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
+
+	useEffect(() => {
+		const promise = dispatch(checkAuth());
+		return () => {
+			promise.abort();
+		};
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (user) {
+			setName(user.name || '');
+			setLogin(user.email || '');
+		}
+	}, [user]);
+
+	const handleSubmit = async () => {
+		try {
+			const response = await API.updateUser(name, login, password, accessToken);
+			dispatch(setUser(response.user));
+		} catch (error) {
+			console.error('Ошибка при изменении данных профиля:', error.message);
+		}
+	};
+
+	const handleReset = () => {
+		if (user) {
+			setName(user.name);
+			setLogin(user.email);
+		}
+	};
 
 	const inputs = [
 		{
@@ -16,7 +51,6 @@ export const Profile = () => {
 			name: 'name',
 			value: name,
 			iconName: 'EditIcon',
-			readOnly: true,
 		},
 		{
 			type: 'text',
@@ -25,7 +59,6 @@ export const Profile = () => {
 			name: 'login',
 			value: login,
 			iconName: 'EditIcon',
-			readOnly: true,
 		},
 		{
 			type: 'password',
@@ -34,9 +67,17 @@ export const Profile = () => {
 			name: 'password',
 			value: password,
 			iconName: 'EditIcon',
-			readOnly: true,
 		},
 	];
 
-	return <AuthForm mode='inside' inputs={inputs} />;
+	return (
+		<AuthForm
+			mode='inside'
+			inputs={inputs}
+			mainButtonText='Сохранить'
+			handleButtonClick={handleSubmit}
+			secondaryButtonText='Отмена'
+			handleSecondaryButtonClick={handleReset}
+		/>
+	);
 };

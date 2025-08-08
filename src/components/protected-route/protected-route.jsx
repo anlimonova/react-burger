@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { PageOverlay } from '@components/page-overlay/page-overlay.jsx';
+import * as PropTypes from 'prop-types';
 
 export const ProtectedRoute = ({ onlyUnAuth = false, component }) => {
 	const location = useLocation();
@@ -29,3 +30,12 @@ export const OnlyAuth = ProtectedRoute;
 export const OnlyUnAuth = ({ component }) => (
 	<ProtectedRoute onlyUnAuth={true} component={component} />
 );
+
+ProtectedRoute.propTypes = {
+	onlyUnAuth: PropTypes.bool,
+	component: PropTypes.element.isRequired,
+};
+
+OnlyUnAuth.propTypes = {
+	component: PropTypes.element.isRequired,
+};

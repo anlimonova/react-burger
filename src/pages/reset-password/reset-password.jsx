@@ -13,9 +13,6 @@ export const ResetPassword = () => {
 		if (!isInitiated) {
 			navigate('/forgot-password');
 		}
-		return () => {
-			localStorage.removeItem('isPasswordResetInitiated');
-		};
 	}, [navigate]);
 
 	const handleSubmit = async () => {
@@ -49,7 +46,7 @@ export const ResetPassword = () => {
 		{
 			text: 'Вспомнили пароль?',
 			label: 'Войти',
-			href: './login',
+			href: '/login',
 		},
 	];
 
@@ -57,7 +54,7 @@ export const ResetPassword = () => {
 		<AuthForm
 			title='Восстановление пароля'
 			inputs={secondInputs}
-			buttonText='Сохранить'
+			mainButtonText='Сохранить'
 			handleButtonClick={handleSubmit}
 			buttonType={'button'}
 			links={links}

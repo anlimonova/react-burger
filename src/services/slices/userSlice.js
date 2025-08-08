@@ -79,7 +79,7 @@ export const userSlice = createSlice({
 
 export const checkAuth = createAsyncThunk(
 	'user/checkAuth',
-	async (_, { dispatch }) => {
+	async (_, { dispatch, signal }) => {
 		try {
 			const accessToken = localStorage.getItem('accessToken');
 			const refreshToken = localStorage.getItem('refreshToken');
@@ -89,15 +89,22 @@ export const checkAuth = createAsyncThunk(
 				return;
 			}
 
-			const { user, accessToken: newAccessToken } = await verifyToken(
-				accessToken,
-				refreshToken
-			);
+			const result = await verifyToken(accessToken, refreshToken, signal);
+
+			if (!result) {
+				dispatch(setIsAuthChecked(true));
+				return;
+			}
+
+			const { user, accessToken: newAccessToken } = result;
 			dispatch(setUser(user));
 			if (newAccessToken !== accessToken) {
 				localStorage.setItem('accessToken', newAccessToken);
 			}
 		} catch (err) {
+			if (err.name === 'AbortError') {
+				return;
+			}
 			console.error('Ошибка авторизации:', err.message);
 			localStorage.removeItem('accessToken');
 			localStorage.removeItem('refreshToken');

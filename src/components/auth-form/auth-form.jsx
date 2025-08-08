@@ -11,10 +11,12 @@ export const AuthForm = ({
 	mode,
 	title,
 	inputs,
-	buttonText,
+	mainButtonText,
 	handleButtonClick,
 	buttonType,
 	links,
+	secondaryButtonText,
+	handleSecondaryButtonClick,
 }) => {
 	const { passwordIconName, passwordInputType, onIconClick } =
 		useTogglePassword();
@@ -43,15 +45,26 @@ export const AuthForm = ({
 						size={'default'}
 					/>
 				))}
-				{buttonText && (
-					<Button
-						htmlType={buttonType || 'button'}
-						type='primary'
-						size='medium'
-						onClick={handleButtonClick}>
-						{buttonText}
-					</Button>
-				)}
+				<div className={secondaryButtonText && `${styles.buttons}`}>
+					{secondaryButtonText && (
+						<Button
+							htmlType={buttonType || 'button'}
+							type='secondary'
+							size='medium'
+							onClick={handleSecondaryButtonClick}>
+							{secondaryButtonText}
+						</Button>
+					)}
+					{mainButtonText && (
+						<Button
+							htmlType={buttonType || 'button'}
+							type='primary'
+							size='medium'
+							onClick={handleButtonClick}>
+							{mainButtonText}
+						</Button>
+					)}
+				</div>
 			</form>
 			{links && (
 				<div className={`${styles.links} mt-20`}>
@@ -73,9 +86,26 @@ export const AuthForm = ({
 AuthForm.propTypes = {
 	mode: PropTypes.string,
 	title: PropTypes.string,
-	inputs: PropTypes.array.isRequired,
-	buttonText: PropTypes.string,
+	inputs: PropTypes.arrayOf(
+		PropTypes.shape({
+			type: PropTypes.string.isRequired,
+			placeholder: PropTypes.string,
+			onChange: PropTypes.func.isRequired,
+			name: PropTypes.string.isRequired,
+			value: PropTypes.string.isRequired,
+			iconName: PropTypes.string,
+		})
+	).isRequired,
+	mainButtonText: PropTypes.string,
 	handleButtonClick: PropTypes.func,
 	buttonType: PropTypes.string,
-	links: PropTypes.array,
+	secondaryButtonText: PropTypes.string,
+	handleSecondaryButtonClick: PropTypes.func,
+	links: PropTypes.arrayOf(
+		PropTypes.shape({
+			text: PropTypes.string.isRequired,
+			label: PropTypes.string.isRequired,
+			href: PropTypes.string.isRequired,
+		})
+	),
 };

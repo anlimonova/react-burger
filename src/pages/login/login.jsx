@@ -31,12 +31,12 @@ export const Login = () => {
 		{
 			text: 'Вы — новый пользователь?',
 			label: 'Зарегистрироваться',
-			href: './registration',
+			href: '/registration',
 		},
 		{
 			text: 'Забыли пароль?',
 			label: 'Восстановить пароль',
-			href: './forgot-password',
+			href: '/forgot-password',
 		},
 	];
 
@@ -44,7 +44,7 @@ export const Login = () => {
 		<AuthForm
 			title='Вход'
 			inputs={inputs}
-			buttonText='Войти'
+			mainButtonText='Войти'
 			handleButtonClick={handleClick}
 			links={links}
 		/>

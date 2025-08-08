@@ -76,9 +76,10 @@ export const API = {
 		}),
 
 	// Получение данных пользователя
-	getUser: (accessToken) =>
+	getUser: (accessToken, signal) =>
 		request('/auth/user', {
 			method: 'GET',
+			signal,
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: accessToken,
