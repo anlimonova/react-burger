@@ -23,3 +23,9 @@
 	min-height: 48px;
 	text-align: center;
 }
+
+.link {
+	display: block;
+	color: #ffffff;
+	text-decoration: none;
+}

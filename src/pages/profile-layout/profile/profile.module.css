@@ -1,0 +1,25 @@
+.profile {
+	display: flex;
+	align-items: flex-start;
+}
+
+.navigation {
+	display: flex;
+	flex-direction: column;
+	max-width: 320px;
+}
+
+.navigation a {
+	display: block;
+	height: 64px;
+	color: #8585ad;
+	text-decoration: none;
+}
+
+.navigation a.link_active {
+	color: var(--text-primary-color);
+}
+
+.note {
+	color: #404053;
+}

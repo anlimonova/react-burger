@@ -8,10 +8,13 @@ import { Modal } from '@components/modals/modal/modal.jsx';
 import { OrderDetails } from '@components/modals/order-details/order-details.jsx';
 import { fetchOrderDetails } from '@/services/slices/orderSlice.js';
 import { selectedIngredientsSlice } from '@/services/slices/selectedIngredientsSlice.js';
-import { Preloader } from '@components/preloader/preloader.jsx';
+import { useNavigate } from 'react-router-dom';
+import { PageOverlay } from '@components/page-overlay/page-overlay.jsx';
 
 export const TotalPrice = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { user } = useSelector((store) => store.user);
 	const { modalType, modalData } = useSelector((state) => state.modal);
 	const { bun, ingredients } = useSelector(
 		(state) => state.selectedIngredients
@@ -28,12 +31,25 @@ export const TotalPrice = () => {
 	}, [bun, ingredients]);
 
 	const handleClick = async () => {
+		if (!user) {
+			navigate('/login');
+			return;
+		}
+
+		const accessToken = localStorage.getItem('accessToken');
+		if (!accessToken) {
+			navigate('/login');
+			return;
+		}
+
 		const ingredientIds = ingredients.map((item) => item._id);
 		if (bun) {
 			ingredientIds.unshift(bun._id);
 			ingredientIds.push(bun._id);
 		}
-		const resultAction = await dispatch(fetchOrderDetails(ingredientIds));
+		const resultAction = await dispatch(
+			fetchOrderDetails({ ingredientIds, accessToken })
+		);
 
 		if (fetchOrderDetails.fulfilled.match(resultAction)) {
 			dispatch(
@@ -63,7 +79,7 @@ export const TotalPrice = () => {
 					<OrderDetails idNumber={modalData?.id} />
 				</Modal>
 			)}
-			{loading && <Preloader />}
+			{loading && <PageOverlay />}
 		</section>
 	);
 };
