@@ -9,7 +9,7 @@ export const Registration = () => {
 	const [password, setPassword] = useState('');
 
 	const action = () => registerUser({ name, email, password });
-	const handleClick = useAuthSubmit(action);
+	const handleSubmit = useAuthSubmit(action);
 
 	const inputs = [
 		{
@@ -48,7 +48,7 @@ export const Registration = () => {
 			title='Регистрация'
 			inputs={inputs}
 			mainButtonText='Зарегистрироваться'
-			handleButtonClick={handleClick}
+			handleSubmit={handleSubmit}
 			links={links}
 		/>
 	);

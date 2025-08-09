@@ -27,7 +27,8 @@ export const Profile = () => {
 		}
 	}, [user]);
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e) => {
+		e?.preventDefault();
 		try {
 			const response = await API.updateUser(name, login, password, accessToken);
 			dispatch(setUser(response.user));
@@ -75,7 +76,7 @@ export const Profile = () => {
 			mode='inside'
 			inputs={inputs}
 			mainButtonText='Сохранить'
-			handleButtonClick={handleSubmit}
+			handleSubmit={handleSubmit}
 			secondaryButtonText='Отмена'
 			handleSecondaryButtonClick={handleReset}
 		/>

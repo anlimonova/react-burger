@@ -12,8 +12,7 @@ export const AuthForm = ({
 	title,
 	inputs,
 	mainButtonText,
-	handleButtonClick,
-	buttonType,
+	handleSubmit,
 	links,
 	secondaryButtonText,
 	handleSecondaryButtonClick,
@@ -24,7 +23,7 @@ export const AuthForm = ({
 	return (
 		<section className={`${styles.centered} ${mode && styles[mode]}`}>
 			{title && <h1 className={'text text_type_main-medium mb-6'}>{title}</h1>}
-			<form className={`${styles.form}`}>
+			<form className={`${styles.form}`} onSubmit={(e) => handleSubmit(e)}>
 				{inputs.map((input) => (
 					<Input
 						key={input.name}
@@ -48,7 +47,7 @@ export const AuthForm = ({
 				<div className={secondaryButtonText && `${styles.buttons}`}>
 					{secondaryButtonText && (
 						<Button
-							htmlType={buttonType || 'button'}
+							htmlType='button'
 							type='secondary'
 							size='medium'
 							onClick={handleSecondaryButtonClick}>
@@ -56,11 +55,7 @@ export const AuthForm = ({
 						</Button>
 					)}
 					{mainButtonText && (
-						<Button
-							htmlType={buttonType || 'button'}
-							type='primary'
-							size='medium'
-							onClick={handleButtonClick}>
+						<Button htmlType='submit' type='primary' size='medium'>
 							{mainButtonText}
 						</Button>
 					)}
@@ -97,8 +92,7 @@ AuthForm.propTypes = {
 		})
 	).isRequired,
 	mainButtonText: PropTypes.string,
-	handleButtonClick: PropTypes.func,
-	buttonType: PropTypes.string,
+	handleSubmit: PropTypes.func,
 	secondaryButtonText: PropTypes.string,
 	handleSecondaryButtonClick: PropTypes.func,
 	links: PropTypes.arrayOf(

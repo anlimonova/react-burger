@@ -14,7 +14,8 @@ export const useAuthSubmit = (actionCreator, onSuccess) => {
 
 	const from = location.state?.from?.pathname || '/';
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e) => {
+		e?.preventDefault();
 		try {
 			const result = await dispatch(actionCreator());
 

@@ -8,7 +8,7 @@ export const Login = () => {
 	const [password, setPassword] = useState('');
 
 	const action = () => loginUser({ email, password });
-	const handleClick = useAuthSubmit(action);
+	const handleSubmit = useAuthSubmit(action);
 
 	const inputs = [
 		{
@@ -45,7 +45,7 @@ export const Login = () => {
 			title='Вход'
 			inputs={inputs}
 			mainButtonText='Войти'
-			handleButtonClick={handleClick}
+			handleSubmit={handleSubmit}
 			links={links}
 		/>
 	);

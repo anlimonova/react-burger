@@ -15,7 +15,8 @@ export const ResetPassword = () => {
 		}
 	}, [navigate]);
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e) => {
+		e?.preventDefault();
 		try {
 			await API.passwordResetConfirm(password, code);
 			localStorage.removeItem('isPasswordResetInitiated');
@@ -55,8 +56,7 @@ export const ResetPassword = () => {
 			title='Восстановление пароля'
 			inputs={secondInputs}
 			mainButtonText='Сохранить'
-			handleButtonClick={handleSubmit}
-			buttonType={'button'}
+			handleSubmit={handleSubmit}
 			links={links}
 		/>
 	);

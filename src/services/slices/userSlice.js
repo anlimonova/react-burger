@@ -1,17 +1,35 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API } from '@utils/api.js';
 import { verifyToken } from '@utils/verifyToken.js';
+import { clearTokens, getTokens, saveTokens } from '@utils/authStorage.js';
 
 const initialState = {
 	user: null,
 	isAuthChecked: false,
 };
 
+export const registerUser = createAsyncThunk(
+	'user/register',
+	async ({ name, email, password }, thunkAPI) => {
+		try {
+			const response = await API.register(name, email, password);
+			saveTokens(response);
+			return response;
+		} catch (error) {
+			return thunkAPI.rejectWithValue(
+				error.message || 'Ошибка при регистрации'
+			);
+		}
+	}
+);
+
 export const loginUser = createAsyncThunk(
 	'user/login',
 	async ({ email, password }, thunkAPI) => {
 		try {
-			return await API.login(email, password);
+			const response = await API.login(email, password);
+			saveTokens(response);
+			return response;
 		} catch (error) {
 			return thunkAPI.rejectWithValue(error.message || 'Ошибка при входе');
 		}
@@ -21,19 +39,43 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
 	'user/logout',
 	async (refreshToken) => {
-		return API.logout(refreshToken);
+		const response = await API.logout(refreshToken);
+		clearTokens();
+		return response;
 	}
 );
 
-export const registerUser = createAsyncThunk(
-	'user/register',
-	async ({ name, email, password }, thunkAPI) => {
+export const checkAuth = createAsyncThunk(
+	'user/checkAuth',
+	async (_, { dispatch, signal }) => {
 		try {
-			return await API.register(name, email, password);
-		} catch (error) {
-			return thunkAPI.rejectWithValue(
-				error.message || 'Ошибка при регистрации'
-			);
+			const { accessToken, refreshToken } = getTokens();
+
+			if (!accessToken) {
+				dispatch(setIsAuthChecked(true));
+				return;
+			}
+
+			const result = await verifyToken(accessToken, refreshToken, signal);
+
+			if (!result) {
+				dispatch(setIsAuthChecked(true));
+				return;
+			}
+
+			const { user, accessToken: newAccessToken } = result;
+			dispatch(setUser(user));
+			if (newAccessToken && newAccessToken !== accessToken) {
+				saveTokens({ accessToken: newAccessToken, refreshToken });
+			}
+		} catch (err) {
+			if (err.name === 'AbortError') {
+				return;
+			}
+			console.error('Ошибка авторизации:', err.message);
+			clearTokens();
+		} finally {
+			dispatch(setIsAuthChecked(true));
 		}
 	}
 );
@@ -57,62 +99,18 @@ export const userSlice = createSlice({
 			.addCase(loginUser.fulfilled, (state, action) => {
 				state.user = action.payload.user;
 				state.isAuthChecked = true;
-				localStorage.setItem('accessToken', action.payload.accessToken);
-				localStorage.setItem('refreshToken', action.payload.refreshToken);
 			})
 			.addCase(loginUser.rejected, (state) => {
 				state.isAuthChecked = true;
 			})
 			.addCase(logoutUser.fulfilled, (state) => {
 				state.user = null;
-				localStorage.removeItem('accessToken');
-				localStorage.removeItem('refreshToken');
 			})
 			.addCase(registerUser.fulfilled, (state, action) => {
 				state.user = action.payload.user;
 				state.isAuthChecked = true;
-				localStorage.setItem('accessToken', action.payload.accessToken);
-				localStorage.setItem('refreshToken', action.payload.refreshToken);
 			});
 	},
 });
 
-export const checkAuth = createAsyncThunk(
-	'user/checkAuth',
-	async (_, { dispatch, signal }) => {
-		try {
-			const accessToken = localStorage.getItem('accessToken');
-			const refreshToken = localStorage.getItem('refreshToken');
-
-			if (!accessToken) {
-				dispatch(setIsAuthChecked(true));
-				return;
-			}
-
-			const result = await verifyToken(accessToken, refreshToken, signal);
-
-			if (!result) {
-				dispatch(setIsAuthChecked(true));
-				return;
-			}
-
-			const { user, accessToken: newAccessToken } = result;
-			dispatch(setUser(user));
-			if (newAccessToken !== accessToken) {
-				localStorage.setItem('accessToken', newAccessToken);
-			}
-		} catch (err) {
-			if (err.name === 'AbortError') {
-				return;
-			}
-			console.error('Ошибка авторизации:', err.message);
-			localStorage.removeItem('accessToken');
-			localStorage.removeItem('refreshToken');
-		} finally {
-			dispatch(setIsAuthChecked(true));
-		}
-	}
-);
-
-export const getUser = (state) => state.user.user;
 export const { setUser, setIsAuthChecked } = userSlice.actions;

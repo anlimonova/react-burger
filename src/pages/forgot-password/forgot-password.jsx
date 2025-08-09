@@ -7,7 +7,8 @@ export const ForgotPassword = () => {
 	const [email, setEmail] = useState('');
 	const navigate = useNavigate();
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e) => {
+		e?.preventDefault();
 		try {
 			await API.passwordReset(email);
 			localStorage.setItem('isPasswordResetInitiated', 'true');
@@ -40,8 +41,7 @@ export const ForgotPassword = () => {
 			title='Восстановление пароля'
 			inputs={firstInputs}
 			mainButtonText='Восстановить'
-			handleButtonClick={handleSubmit}
-			buttonType={'button'}
+			handleSubmit={handleSubmit}
 			links={links}
 		/>
 	);
