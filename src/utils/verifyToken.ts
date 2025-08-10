@@ -1,6 +1,6 @@
-import { API } from '@utils/api.ts';
+import { API } from '@utils/api';
 
-import type { TUser } from '@utils/types.js';
+import type { TUser } from '@utils/types';
 
 type TVerifyTokenResult = {
   user: TUser;

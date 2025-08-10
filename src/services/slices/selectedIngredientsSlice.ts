@@ -7,7 +7,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { TIngredient } from '@utils/types.ts';
+import type { TIngredient } from '@utils/types';
 
 export type SelectedIngredient = {
   uuid: string;

@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { API } from '@utils/api.ts';
-import { clearTokens, getTokens, saveTokens } from '@utils/authStorage.js';
-import { verifyToken } from '@utils/verifyToken.js';
+import { API } from '@utils/api';
+import { clearTokens, getTokens, saveTokens } from '@utils/authStorage';
+import { verifyToken } from '@utils/verifyToken';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { TAuthResponse, TUser } from '@utils/types.ts';
+import type { TAuthResponse, TUser } from '@utils/types';
 
 // Состояние слайса
 type UserState = {

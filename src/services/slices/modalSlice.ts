@@ -1,13 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
-
-type ModalData = Record<string, unknown> | null;
-type modalType = string | null;
+import type { TModalData, TModalType } from '@utils/types';
 
 type ModalState = {
-  modalType: modalType;
-  modalData: ModalData;
+  modalType: TModalType;
+  modalData: TModalData;
 };
 
 const initialState: ModalState = {
@@ -21,7 +19,7 @@ export const modalSlice = createSlice({
   reducers: {
     openModal: (
       state,
-      action: PayloadAction<{ modalType: modalType; modalData: ModalData }>
+      action: PayloadAction<{ modalType: TModalType; modalData: TModalData }>
     ) => {
       state.modalType = action.payload.modalType;
       state.modalData = action.payload.modalData;
@@ -32,3 +30,5 @@ export const modalSlice = createSlice({
     },
   },
 });
+
+// export default modalSlice.reducer;

@@ -1,8 +1,8 @@
-import { useAppDispatch } from '@/hooks/reduxHooks.ts';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import type { AsyncThunkAction } from '@reduxjs/toolkit';
-import type { AppDispatch } from '@services/store.ts';
+import type { AppDispatch } from '@services/store';
 import type { FormEvent } from 'react';
 
 type LocationState = {

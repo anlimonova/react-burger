@@ -1,6 +1,6 @@
 import { request } from './request';
 
-import type { TAuthResponse, TIngredient } from '@utils/types.ts';
+import type { TAuthResponse, TIngredient } from '@utils/types';
 
 // todo: проверить типы ответов
 
