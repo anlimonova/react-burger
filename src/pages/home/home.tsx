@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks'; // кастомные хуки
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { fetchIngredients } from '@/services/slices/ingredientsSlice';
 import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';

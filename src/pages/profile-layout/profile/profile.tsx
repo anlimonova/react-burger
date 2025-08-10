@@ -6,7 +6,7 @@ import { AuthForm } from '@components/auth-form/auth-form';
 import { checkAuth, setUser } from '@services/slices/userSlice';
 import { API } from '@utils/api';
 
-import type { RootState } from '@services/store'; // если у вас настроены типы для Redux
+import type { RootState } from '@services/store';
 import type { TFormInputField } from '@utils/types';
 import type { ChangeEvent, FormEvent } from 'react';
 import type React from 'react';
@@ -54,7 +54,7 @@ export const Profile: React.FC = () => {
     if (user) {
       setName(user.name);
       setLogin(user.email);
-      setPassword(''); // возможно стоит очистить пароль при сбросе
+      setPassword('');
     }
   };
 
@@ -65,7 +65,7 @@ export const Profile: React.FC = () => {
       onChange: (e: ChangeEvent<HTMLInputElement>) => setName(e.target.value),
       name: 'name',
       value: name,
-      iconName: 'EditIcon',
+      icon: 'EditIcon',
     },
     {
       type: 'text',
@@ -73,7 +73,7 @@ export const Profile: React.FC = () => {
       onChange: (e: ChangeEvent<HTMLInputElement>) => setLogin(e.target.value),
       name: 'login',
       value: login,
-      iconName: 'EditIcon',
+      icon: 'EditIcon',
     },
     {
       type: 'password',
@@ -81,7 +81,7 @@ export const Profile: React.FC = () => {
       onChange: (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value),
       name: 'password',
       value: password,
-      iconName: 'EditIcon',
+      icon: 'EditIcon',
     },
   ];
 
@@ -90,7 +90,7 @@ export const Profile: React.FC = () => {
       mode="inside"
       inputs={inputs}
       mainButtonText="Сохранить"
-      handleSubmit={() => handleSubmit}
+      handleSubmit={handleSubmit}
       secondaryButtonText="Отмена"
       handleSecondaryButtonClick={handleReset}
     />

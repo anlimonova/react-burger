@@ -25,8 +25,6 @@ const initialState: SelectedIngredientsState = loadFromSession(
   ingredients: [],
 };
 
-const uuid: string = uuidv4();
-
 export const selectedIngredientsSlice = createSlice({
   name: 'selectedIngredients',
   initialState,
@@ -44,9 +42,12 @@ export const selectedIngredientsSlice = createSlice({
         saveToSession(SELECTED_INGREDIENTS_KEY, state);
       },
 
-      prepare: (ingredient: TIngredient): { payload: SelectedIngredient } => ({
-        payload: { ...ingredient, uuid },
-      }),
+      prepare: (ingredient: TIngredient): { payload: SelectedIngredient } => {
+        const uuid: string = uuidv4();
+        return {
+          payload: { ...ingredient, uuid },
+        };
+      },
     },
 
     // Удаление ингредиента по uuid

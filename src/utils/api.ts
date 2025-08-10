@@ -2,8 +2,6 @@ import { request } from './request';
 
 import type { TAuthResponse, TIngredient } from '@utils/types';
 
-// todo: проверить типы ответов
-
 type OrderResponse = {
   success: boolean;
   name: string;

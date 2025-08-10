@@ -1,6 +1,7 @@
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { NavLink, Outlet } from 'react-router-dom';
 
+import { selectedIngredientsSlice } from '@services/slices/selectedIngredientsSlice.ts';
 import { logoutUser } from '@services/slices/userSlice';
 
 import type React from 'react';
@@ -14,6 +15,7 @@ export const ProfileLayout: React.FC = () => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
       await dispatch(logoutUser(refreshToken));
+      dispatch(selectedIngredientsSlice.actions.resetSelectedIngredients());
     }
   };
 
@@ -39,7 +41,7 @@ export const ProfileLayout: React.FC = () => {
             </NavLink>
           </li>
           <li>
-            <button onClick={() => handleClick} type="button">
+            <button onClick={() => void handleClick()} type="button">
               Выход
             </button>
           </li>

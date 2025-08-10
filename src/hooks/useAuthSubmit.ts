@@ -1,9 +1,9 @@
-import { useAppDispatch } from '@/hooks/reduxHooks';
+import { useAppDispatch } from '@/hooks/reduxHooks.ts';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import type { AsyncThunkAction } from '@reduxjs/toolkit';
-import type { AppDispatch } from '@services/store';
 import type { FormEvent } from 'react';
+import type React from 'react';
 
 type LocationState = {
   from?: { pathname: string };
@@ -13,12 +13,13 @@ type LocationState = {
  * Выполняет экшен авторизации/регистрации и редиректит обратно на защищённый маршрут
  * @param actionCreator - функция, возвращающая AsyncThunkAction
  * @param onSuccess - колбэк при успешном выполнении
+ * @returns handleSubmit - функция для onSubmit формы
  */
 export const useAuthSubmit = <Returned, ThunkArg>(
   actionCreator: (arg: ThunkArg) => AsyncThunkAction<Returned, ThunkArg, object>,
   onSuccess?: () => void
 ): ((e?: FormEvent<HTMLFormElement>, arg?: ThunkArg) => Promise<void>) => {
-  const dispatch: AppDispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,28 +27,22 @@ export const useAuthSubmit = <Returned, ThunkArg>(
   const from = state?.from?.pathname ?? '/';
 
   const handleSubmit = async (
-    e?: FormEvent<HTMLFormElement>,
+    e?: React.FormEvent<HTMLFormElement>,
     arg?: ThunkArg
   ): Promise<void> => {
     e?.preventDefault();
-
-    if (arg === undefined) {
-      console.error('Не передан аргумент для Thunk');
-      return;
-    }
+    if (!arg) return;
 
     try {
-      const result = await dispatch(actionCreator(arg));
-
-      if ('meta' in result && result.meta.requestStatus === 'fulfilled') {
-        onSuccess?.();
-        void navigate(from, { replace: true });
-      } else {
-        console.error('Ошибка:', 'payload' in result ? result.payload : result);
-      }
+      await dispatch(actionCreator(arg)).unwrap();
+      onSuccess?.();
+      void navigate(from, { replace: true });
     } catch (err) {
-      const error = err instanceof Error ? err.message : String(err);
-      console.error('Ошибка запроса:', error);
+      if (err instanceof Error) {
+        console.error('Ошибка запроса:', err.message);
+      } else {
+        console.error('Ошибка запроса:', err);
+      }
     }
   };
 

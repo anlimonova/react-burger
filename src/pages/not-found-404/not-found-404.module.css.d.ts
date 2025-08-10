@@ -1,4 +1,4 @@
 declare const classNames: {
-  readonly flex: 'flex';
+  readonly flex: "flex";
 };
 export default classNames;

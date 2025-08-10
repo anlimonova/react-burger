@@ -78,7 +78,7 @@ export const ResetPassword: React.FC = () => {
       title="Восстановление пароля"
       inputs={secondInputs}
       mainButtonText="Сохранить"
-      handleSubmit={() => handleSubmit}
+      handleSubmit={handleSubmit}
       links={links}
     />
   );

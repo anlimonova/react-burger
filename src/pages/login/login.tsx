@@ -12,8 +12,7 @@ export const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const action = (): ReturnType<typeof loginUser> => loginUser({ email, password });
-  const handleSubmit = useAuthSubmit(action);
+  const handleSubmit = useAuthSubmit(loginUser);
 
   const inputs: TFormInputField[] = [
     {
@@ -50,7 +49,7 @@ export const Login: React.FC = () => {
       title="Вход"
       inputs={inputs}
       mainButtonText="Войти"
-      handleSubmit={() => handleSubmit}
+      handleSubmit={(e) => handleSubmit(e, { email, password })}
       links={links}
     />
   );

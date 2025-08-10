@@ -50,7 +50,7 @@ export const ForgotPassword: React.FC = () => {
       title="Восстановление пароля"
       inputs={firstInputs}
       mainButtonText="Восстановить"
-      handleSubmit={() => handleSubmit}
+      handleSubmit={handleSubmit}
       links={links}
     />
   );

@@ -15,9 +15,7 @@ export const Registration: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const action = (): ReturnType<typeof registerUser> =>
-    registerUser({ name, email, password });
-  const handleSubmit = useAuthSubmit(action);
+  const handleSubmit = useAuthSubmit(registerUser);
 
   const inputs: TFormInputField[] = [
     {
@@ -56,7 +54,7 @@ export const Registration: React.FC = () => {
       title="Регистрация"
       inputs={inputs}
       mainButtonText="Зарегистрироваться"
-      handleSubmit={() => handleSubmit}
+      handleSubmit={(e) => handleSubmit(e, { name, email, password })}
       links={links}
     />
   );

@@ -11,7 +11,7 @@ type TAuthFormProps = {
   title?: string;
   inputs: TFormInputField[];
   mainButtonText?: string;
-  handleSubmit?: (e: FormEvent<HTMLFormElement>) => void;
+  handleSubmit?: (e: FormEvent<HTMLFormElement>) => void | Promise<void>;
   secondaryButtonText?: string;
   handleSecondaryButtonClick?: () => void;
   links?: TFormLink[];
@@ -36,19 +36,22 @@ export const AuthForm: FC<TAuthFormProps> = ({
       className={`${styles.centered} ${mode ? styles[mode as keyof typeof styles] : ''}`}
     >
       {title && <h1 className={'text text_type_main-medium mb-6'}>{title}</h1>}
-      <form className={`${styles.form}`} onSubmit={(e) => handleSubmit(e)}>
+      <form
+        className={`${styles.form}`}
+        onSubmit={(e) => {
+          void handleSubmit(e);
+        }}
+      >
         {inputs.map((input) => (
           <Input
             key={input.name}
             type={input.type === 'password' ? passwordInputType : input.type}
             placeholder={input.placeholder}
-            onChange={input.onChange}
-            icon={input.iconName ?? (input.type === 'password' ? iconName : undefined)}
+            onChange={(e) => input.onChange(e)}
+            icon={input.type === 'password' ? iconName : undefined}
             onIconClick={input.type === 'password' ? onIconClick : undefined}
             name={input.name}
             value={input.value}
-            error={false}
-            size={'default'}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
           />

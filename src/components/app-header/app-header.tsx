@@ -15,8 +15,6 @@ import styles from './app-header.module.css';
 export const AppHeader = (): React.JSX.Element => {
   const { user } = useSelector((store: { user: { user: TUser | null } }) => store.user);
 
-  // useEffect(() => {}, [user]);
-
   return (
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>

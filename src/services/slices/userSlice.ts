@@ -7,7 +7,6 @@ import { verifyToken } from '@utils/verifyToken';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { TAuthResponse, TUser } from '@utils/types';
 
-// Состояние слайса
 type UserState = {
   user: TUser | null;
   isAuthChecked: boolean;
@@ -18,14 +17,12 @@ const initialState: UserState = {
   isAuthChecked: false,
 };
 
-// Payload для регистрации и логина
 type AuthPayload = {
-  name?: string; // для регистрации
+  name?: string;
   email: string;
   password: string;
 };
 
-// Ошибка в rejectWithValue будет строкой
 type RejectValue = string;
 
 export const registerUser = createAsyncThunk<
@@ -36,7 +33,7 @@ export const registerUser = createAsyncThunk<
   try {
     const response = await API.register(name, email, password);
     saveTokens({
-      accessToken: response.accessToken,
+      accessToken: response.accessToken.replace(/^Bearer\s/, ''),
       refreshToken: response.refreshToken,
     });
     return response;
@@ -55,7 +52,7 @@ export const loginUser = createAsyncThunk<
   try {
     const response = await API.login(email, password);
     saveTokens({
-      accessToken: response.accessToken,
+      accessToken: response.accessToken.replace(/^Bearer\s/, ''),
       refreshToken: response.refreshToken,
     });
     return response;

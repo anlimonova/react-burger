@@ -1,3 +1,4 @@
+import { useAppDispatch } from '@/hooks/reduxHooks.ts';
 import { selectedIngredientsSlice } from '@/services/slices/selectedIngredientsSlice';
 import {
   ConstructorElement,
@@ -5,7 +6,6 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { useDispatch } from 'react-redux';
 
 import type { TIngredientWithUUID } from '@utils/types';
 import type { FC } from 'react';
@@ -28,7 +28,7 @@ export const DraggableIngredient: FC<DraggableIngredientProps> = ({
   index,
   moveIngredient,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLLIElement>(null);
 
   const [{ isDragging }, dragRef] = useDrag({

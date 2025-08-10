@@ -1,5 +1,5 @@
 import type { TICons } from '@ya.praktikum/react-developer-burger-ui-components/dist/ui/icons';
-import type React from 'react';
+import type { ChangeEvent } from 'react';
 
 export type TIngredient = {
   _id: string;
@@ -44,10 +44,11 @@ export type TAuthResponse = {
 export type TFormInputField = {
   type: 'password' | 'text' | 'email' | undefined;
   placeholder?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   name: string;
   value: string;
-  iconName?: keyof TICons | undefined;
+  icon?: keyof TICons | undefined;
+  onIconClick?: () => void;
 };
 
 export type TFormLink = {
