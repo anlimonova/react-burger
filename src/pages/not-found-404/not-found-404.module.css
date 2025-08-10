@@ -1,12 +1,7 @@
-.nutrition-info {
-	display: flex;
-	justify-content: center;
-	gap: 20px;
-}
-
-.pageContent {
+.flex {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	height: 100%;
 }

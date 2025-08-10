@@ -1,57 +1,89 @@
 import React, { useEffect } from 'react';
 import styles from './app.module.css';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients.jsx';
-import { BurgerConstructor } from '@components/burger-contructor/burger-constructor.jsx';
 import { AppHeader } from '@components/app-header/app-header.jsx';
-import { Preloader } from '@components/preloader/preloader.jsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchIngredients } from '@/services/slices/ingredientsSlice.js';
+import { Home } from '@pages/home/home.jsx';
+import { Login } from '@pages/login/login.jsx';
+import { Profile } from '@pages/profile-layout/profile/profile.jsx';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Registration } from '@pages/registration/registration.jsx';
+import { ForgotPassword } from '@pages/forgot-password/forgot-password.jsx';
+import { ResetPassword } from '@pages/reset-password/reset-password.jsx';
 import { modalSlice } from '@/services/slices/modalSlice.js';
-import { Modal } from '@components/modals/modal/modal.jsx';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details.jsx';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Modal } from '@components/modals/modal/modal.jsx';
+import { useDispatch } from 'react-redux';
+import {
+	OnlyAuth,
+	OnlyUnAuth,
+} from '@components/protected-route/protected-route.jsx';
+import { checkAuth } from '@/services/slices/userSlice';
+import { ProfileLayout } from '@pages/profile-layout/profile-layout.jsx';
+import { NotFound404 } from '@pages/not-found-404/not-found-404.jsx';
+import { OrdersHistory } from '@pages/orders-history/orders-history.jsx';
 
 export const App = () => {
+	const location = useLocation();
+	const navigate = useNavigate();
+	const background = location.state && location.state.background;
 	const dispatch = useDispatch();
-	const { ingredients, loading } = useSelector((state) => state.ingredients);
-	const { modalType, modalData } = useSelector((state) => state.modal);
 
 	useEffect(() => {
-		const promise = dispatch(fetchIngredients());
+		const promise = dispatch(checkAuth());
 		return () => {
 			promise.abort();
 		};
 	}, [dispatch]);
 
-	if (loading || ingredients.length === 0) {
-		return (
-			<div className={styles.app}>
-				<Preloader />;
-			</div>
-		);
-	}
+	const handleModalClose = () => {
+		dispatch(modalSlice.actions.closeModal());
+		navigate(-1);
+	};
 
 	return (
-		<DndProvider backend={HTML5Backend}>
-			<div className={styles.app}>
-				<AppHeader />
-				<h1
-					className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-					Соберите бургер
-				</h1>
-				<main className={`${styles.main} pl-5 pr-5`}>
-					<BurgerIngredients />
-					<BurgerConstructor />
-				</main>
-				{modalType === 'ingredient' && (
-					<Modal
-						title={'Детали ингредиента'}
-						onClose={() => dispatch(modalSlice.actions.closeModal())}>
-						<IngredientDetails ingredient={modalData} />
-					</Modal>
+		<div className={styles.app}>
+			<AppHeader />
+			<main className={`${styles.main} pl-5 pr-5`}>
+				<Routes location={background || location}>
+					<Route path='/' element={<Home />}></Route>
+					<Route
+						path='/ingredients/:ingredientId'
+						element={<IngredientDetails />}
+					/>
+					<Route
+						path='/login'
+						element={<OnlyUnAuth component={<Login />} />}></Route>
+					<Route
+						path='/registration'
+						element={<OnlyUnAuth component={<Registration />} />}></Route>
+					<Route
+						path='/forgot-password'
+						element={<OnlyUnAuth component={<ForgotPassword />} />}></Route>
+					<Route
+						path='/reset-password'
+						element={<OnlyUnAuth component={<ResetPassword />} />}></Route>
+					<Route
+						path='profile'
+						element={<OnlyAuth component={<ProfileLayout />} />}>
+						<Route index element={<Profile />} />
+						<Route path='orders' element={<OrdersHistory />} />
+						{/*<Route path='orders/:number' element={<OrderDetails />} />*/}
+					</Route>
+					<Route path='*' element={<NotFound404 />} />
+				</Routes>
+
+				{background && (
+					<Routes>
+						<Route
+							path='/ingredients/:ingredientId'
+							element={
+								<Modal title='Детали ингредиента' onClose={handleModalClose}>
+									<IngredientDetails modal />
+								</Modal>
+							}
+						/>
+					</Routes>
 				)}
-			</div>
-		</DndProvider>
+			</main>
+		</div>
 	);
 };
