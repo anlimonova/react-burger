@@ -43,6 +43,8 @@ export const AuthForm: FC<TAuthFormProps> = ({
         }}
       >
         {inputs.map((input) => (
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           <Input
             key={input.name}
             type={input.type === 'password' ? passwordInputType : input.type}
@@ -52,8 +54,6 @@ export const AuthForm: FC<TAuthFormProps> = ({
             onIconClick={input.type === 'password' ? onIconClick : undefined}
             name={input.name}
             value={input.value}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
           />
         ))}
         <div className={secondaryButtonText && `${styles.buttons}`}>
