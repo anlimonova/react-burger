@@ -1,6 +1,25 @@
 import type { TICons } from '@ya.praktikum/react-developer-burger-ui-components/dist/ui/icons';
 import type { ChangeEvent } from 'react';
 
+export type TOrderStatus = 'done' | 'pending' | 'created';
+
+export type TOrder = {
+  _id: string;
+  status: TOrderStatus;
+  name: string;
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+  ingredients: string[];
+};
+
+export type TOrdersResponse = {
+  success: boolean;
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+};
+
 export type TIngredient = {
   _id: string;
   name: string;

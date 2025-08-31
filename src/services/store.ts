@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { feedSlice } from './slices/feedSlice.ts';
 import { ingredientsSlice } from './slices/ingredientsSlice';
 import { modalSlice } from './slices/modalSlice';
 import { orderSlice } from './slices/orderSlice';
@@ -13,6 +14,7 @@ export const store = configureStore({
     modal: modalSlice.reducer,
     order: orderSlice.reducer,
     user: userSlice.reducer,
+    feed: feedSlice.reducer,
   },
 });
 

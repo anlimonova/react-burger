@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
-import { entries } from '@utils/entries'; // наш новый хелпер
+import { entries } from '@utils/entries';
 
 import type { RootState } from '@services/store';
 import type { TIngredient } from '@utils/types';

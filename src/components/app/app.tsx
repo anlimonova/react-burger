@@ -7,6 +7,7 @@ import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details';
 import { Modal } from '@components/modals/modal/modal.tsx';
 import { OnlyAuth, OnlyUnAuth } from '@components/protected-route/protected-route';
+import { Feed } from '@pages/feed/feed.tsx';
 import { ForgotPassword } from '@pages/forgot-password/forgot-password';
 import { Home } from '@pages/home/home';
 import { Login } from '@pages/login/login';
@@ -75,6 +76,7 @@ export const App = (): React.JSX.Element => {
             <Route path="orders" element={<OrdersHistory />} />
             {/*<Route path='orders/:number' element={<OrderDetails />} />*/}
           </Route>
+          <Route path="/feed" element={<Feed />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
 

@@ -1,0 +1,67 @@
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { Price } from '@components/ui/price/price.tsx';
+
+import type { RootState } from '@services/store';
+import type { TOrder, TIngredient } from '@utils/types';
+import type { FC } from 'react';
+
+import styles from './order-item.module.css';
+
+type IngredientItemProps = {
+  orderItem: TOrder;
+};
+
+export const OrderItem: FC<IngredientItemProps> = ({ orderItem }) => {
+  const ingredients = useSelector((state: RootState) => state.ingredients.ingredients);
+
+  const orderIngredients: TIngredient[] = orderItem.ingredients
+    .map((id) => ingredients.find((ingredient) => ingredient._id === id))
+    .filter(Boolean) as TIngredient[];
+
+  const totalPrice = orderIngredients.reduce((sum, item) => sum + item.price, 0);
+
+  return (
+    <Link
+      to={`/feed/${orderItem._id}`}
+      state={{ background: location }}
+      className={`${styles.link}`}
+    >
+      <div className={`${styles.orderItem} p-6`}>
+        <div className={`${styles.top}`}>
+          <span className={`text text_type_digits-default`}>#{orderItem.number}</span>
+          <span className={`text text_type_main-default text_color_inactive`}>
+            {new Date(orderItem.createdAt).toLocaleString()}
+          </span>
+        </div>
+
+        <div className={`text text_type_main-medium mt-6`}>{orderItem.name}</div>
+
+        <div className={`${styles.bottom} mt-6`}>
+          <div className={`${styles.images} pr-6`}>
+            {orderIngredients.slice(0, 6).map((item, index) => (
+              <div
+                key={item._id + index}
+                className={`${styles.imageContainer}`}
+                style={{ zIndex: orderIngredients.length - index }}
+              >
+                <img
+                  src={item.image_mobile}
+                  alt={item.name}
+                  className={`${styles.image}`}
+                />
+                {orderIngredients.length > 6 && index === 5 && (
+                  <span className={`${styles.moreCount}`}>
+                    +{orderIngredients.length - 6}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          <Price price={totalPrice} />
+        </div>
+      </div>
+    </Link>
+  );
+};
