@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
+import { entries } from '@utils/entries'; // наш новый хелпер
 
 import type { RootState } from '@services/store';
 import type { TIngredient } from '@utils/types';
@@ -42,15 +43,13 @@ export const BurgerIngredients: React.FC = () => {
 
     const wrapperTop = wrapperRef.current.getBoundingClientRect().top;
 
-    const offsets = (Object.entries(groups) as [IngredientType, Group][]).map(
-      ([key, { ref }]) => {
-        if (!ref.current) return { key, offset: Infinity };
-        return {
-          key,
-          offset: Math.abs(ref.current.getBoundingClientRect().top - wrapperTop),
-        };
-      }
-    );
+    const offsets = entries(groups).map(([key, { ref }]) => {
+      if (!ref.current) return { key, offset: Infinity };
+      return {
+        key,
+        offset: Math.abs(ref.current.getBoundingClientRect().top - wrapperTop),
+      };
+    });
 
     const closest = offsets.reduce((prev, curr) =>
       curr.offset < prev.offset ? curr : prev
@@ -69,20 +68,16 @@ export const BurgerIngredients: React.FC = () => {
     <section className={styles.burger_ingredients}>
       <nav>
         <ul className={styles.menu}>
-          {(Object.entries(groups) as [IngredientType, Group][]).map(
-            ([id, { title }]) => (
-              <Tab
-                key={id}
-                value={id}
-                active={activeTab === id}
-                onClick={() => {
-                  handleTabClick(id);
-                }}
-              >
-                {title}
-              </Tab>
-            )
-          )}
+          {entries(groups).map(([id, { title }]) => (
+            <Tab
+              key={id}
+              value={id}
+              active={activeTab === id}
+              onClick={() => handleTabClick(id)}
+            >
+              {title}
+            </Tab>
+          ))}
         </ul>
       </nav>
       <div
@@ -90,16 +85,14 @@ export const BurgerIngredients: React.FC = () => {
         className={`${styles.burger_ingredients_wrapper} custom-scroll pb-10`}
         onScroll={handleScroll}
       >
-        {(Object.entries(groups) as [IngredientType, Group][]).map(
-          ([id, { title, ref }]) => (
-            <IngredientsGroup
-              key={id}
-              title={title}
-              ingredients={filterIngredientsByType(id)}
-              ref={ref}
-            />
-          )
-        )}
+        {entries(groups).map(([id, { title, ref }]) => (
+          <IngredientsGroup
+            key={id}
+            title={title}
+            ingredients={filterIngredientsByType(id)}
+            ref={ref}
+          />
+        ))}
       </div>
     </section>
   );
