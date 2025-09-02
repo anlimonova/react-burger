@@ -1,29 +1,30 @@
 .profile {
-	display: flex;
-	align-items: flex-start;
+  display: flex;
+  align-items: flex-start;
+  height: calc(100% - 120px);
 }
 
 .navigation {
-	display: flex;
-	flex-direction: column;
-	max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
 }
 
 .navigation a {
-	display: block;
-	height: 64px;
-	color: #8585ad;
-	text-decoration: none;
+  display: block;
+  height: 64px;
+  color: #8585ad;
+  text-decoration: none;
 }
 
 .navigation a.link_active {
-	color: var(--text-primary-color);
+  color: var(--text-primary-color);
 }
 
 .navigation button {
-	color: #8585ad;
+  color: #8585ad;
 }
 
 .note {
-	color: #404053;
+  color: #404053;
 }

@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Price } from '@components/ui/price/price.tsx';
+import { formatRelativeDate } from '@utils/formatRelativeDate';
 
 import type { RootState } from '@services/store';
 import type { TOrder, TIngredient } from '@utils/types';
@@ -9,11 +10,20 @@ import type { FC } from 'react';
 
 import styles from './order-item.module.css';
 
-type IngredientItemProps = {
-  orderItem: TOrder;
+const statusMap: Record<string, string> = {
+  done: 'Выполнен',
+  pending: 'Готовится',
+  created: 'Создан',
 };
 
-export const OrderItem: FC<IngredientItemProps> = ({ orderItem }) => {
+type OrderItemVariant = 'feed' | 'profile';
+
+type IngredientItemProps = {
+  orderItem: TOrder;
+  variant?: OrderItemVariant;
+};
+
+export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
   const ingredients = useSelector((state: RootState) => state.ingredients.ingredients);
 
   const orderIngredients: TIngredient[] = orderItem.ingredients
@@ -32,11 +42,19 @@ export const OrderItem: FC<IngredientItemProps> = ({ orderItem }) => {
         <div className={`${styles.top}`}>
           <span className={`text text_type_digits-default`}>#{orderItem.number}</span>
           <span className={`text text_type_main-default text_color_inactive`}>
-            {new Date(orderItem.createdAt).toLocaleString()}
+            {formatRelativeDate(orderItem.createdAt)}
           </span>
         </div>
 
         <div className={`text text_type_main-medium mt-6`}>{orderItem.name}</div>
+
+        {variant === 'profile' && (
+          <div
+            className={`${orderItem.status === 'done' ? styles.done : ''} text text_type_main-default mt-2`}
+          >
+            {statusMap[orderItem.status] ?? orderItem.status}
+          </div>
+        )}
 
         <div className={`${styles.bottom} mt-6`}>
           <div className={`${styles.images} pr-6`}>

@@ -29,6 +29,10 @@
   padding-left: 16px;
 }
 
+.done {
+  color: #0cc;
+}
+
 .imageContainer {
   position: relative;
   width: 64px;

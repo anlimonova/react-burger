@@ -1,10 +1,6 @@
-import { useAppDispatch } from '@/hooks/reduxHooks.ts';
-import { fetchIngredients } from '@/services/slices/ingredientsSlice';
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { PageOverlay } from '@components/page-overlay/page-overlay';
 import { NumberInfo } from '@components/ui/number-info/number-info';
 
 import type { RootState } from '@/services/store';
@@ -25,23 +21,15 @@ export const IngredientDetails: React.FC<IngredientDetailsProps> = ({
   modal = false,
 }) => {
   const { ingredientId } = useParams<IngredientParams>();
-  const dispatch = useAppDispatch();
 
-  const { ingredients, loading } = useSelector((state: RootState) => state.ingredients);
+  const { ingredients } = useSelector((state: RootState) => state.ingredients);
   const { modalData } = useSelector((state: RootState) => state.modal);
-
-  useEffect(() => {
-    if (!modal && ingredients.length === 0) {
-      void dispatch(fetchIngredients());
-    }
-  }, [dispatch, ingredients.length, modal]);
 
   const ingredient: TIngredient | null =
     (modalData as TIngredient) ||
     ingredients.find((ing) => ing._id === ingredientId) ||
     null;
 
-  if (loading) return <PageOverlay />;
   if (!ingredient)
     return <div className="text text_type_main-default">Ингредиент не найден</div>;
 

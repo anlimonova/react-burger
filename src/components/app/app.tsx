@@ -1,4 +1,4 @@
-import { useAppDispatch } from '@/hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { checkAuth } from '@/services/slices/userSlice';
 import { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details';
 import { Modal } from '@components/modals/modal/modal.tsx';
+import { PageOverlay } from '@components/page-overlay/page-overlay.tsx';
 import { OnlyAuth, OnlyUnAuth } from '@components/protected-route/protected-route';
 import { Feed } from '@pages/feed/feed.tsx';
 import { ForgotPassword } from '@pages/forgot-password/forgot-password';
@@ -17,8 +18,10 @@ import { ProfileLayout } from '@pages/profile-layout/profile-layout';
 import { Profile } from '@pages/profile-layout/profile/profile';
 import { Registration } from '@pages/registration/registration';
 import { ResetPassword } from '@pages/reset-password/reset-password';
+import { fetchIngredients } from '@services/slices/ingredientsSlice.ts';
 import { modalSlice } from '@services/slices/modalSlice';
 
+import type { RootState } from '@services/store.ts';
 import type { EffectCallback } from 'react';
 import type React from 'react';
 
@@ -36,6 +39,10 @@ export const App = (): React.JSX.Element => {
   const state = location.state as TLocationState | null;
   const background = state?.background;
 
+  const { ingredients, loading: ingredientsLoading } = useAppSelector(
+    (state: RootState) => state.ingredients
+  );
+
   useEffect((): ReturnType<EffectCallback> => {
     const controller = new AbortController();
 
@@ -46,10 +53,25 @@ export const App = (): React.JSX.Element => {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    const promise = dispatch(fetchIngredients());
+    return (): void => {
+      promise.abort?.();
+    };
+  }, [dispatch, ingredients.length]);
+
   const handleModalClose = (): void => {
     dispatch(modalSlice.actions.closeModal());
     void navigate(-1);
   };
+
+  if (ingredientsLoading || ingredients.length === 0) {
+    return (
+      <div className={styles.app}>
+        <PageOverlay />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.app}>

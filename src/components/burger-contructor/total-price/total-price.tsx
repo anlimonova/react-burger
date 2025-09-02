@@ -66,7 +66,7 @@ export const TotalPrice = (): React.JSX.Element => {
   };
 
   return (
-    <section className={`${styles['total-price']} pr-4`}>
+    <section className={`${styles['total-price']} pr-4 pt-10`}>
       <Price price={totalPriceValue} isLarge />
       <Button
         htmlType="button"
