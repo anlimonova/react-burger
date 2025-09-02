@@ -35,7 +35,7 @@ export const API = {
     request('/ingredients', { signal }),
 
   // Отправка данных заказа
-  orderDetails: (
+  orderAccepting: (
     ingredientIds: string[],
     accessToken?: string
   ): Promise<OrderResponse> =>

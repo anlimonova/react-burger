@@ -2,13 +2,13 @@ import doneImage from '../../../images/done.jpg';
 
 import type { FC } from 'react';
 
-import styles from './order-details.module.css';
+import styles from './order-accepting.module.css';
 
-type OrderDetailsProps = {
+type OrderAcceptingProps = {
   idNumber: number;
 };
 
-export const OrderDetails: FC<OrderDetailsProps> = ({ idNumber }) => {
+export const OrderAccepting: FC<OrderAcceptingProps> = ({ idNumber }) => {
   return (
     <>
       <span className={`${styles['order-number']} text_type_digits-large mt-4`}>

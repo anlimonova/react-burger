@@ -96,7 +96,7 @@ export const App = (): React.JSX.Element => {
           <Route path="profile" element={<OnlyAuth component={<ProfileLayout />} />}>
             <Route index element={<Profile />} />
             <Route path="orders" element={<OrdersHistory />} />
-            {/*<Route path='orders/:number' element={<OrderDetails />} />*/}
+            {/*<Route path='orders/:number' element={<OrderAccepting />} />*/}
           </Route>
           <Route path="/feed" element={<Feed />} />
           <Route path="*" element={<NotFound404 />} />

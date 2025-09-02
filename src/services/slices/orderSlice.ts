@@ -12,34 +12,34 @@ type OrderResponse = {
   success: boolean;
 };
 
-type FetchOrderDetailsArgs = {
+type FetchOrderAcceptingArgs = {
   ingredientIds: string[];
   accessToken: string;
 };
 
 type OrderState = {
-  orderDetails: OrderResponse | null;
+  orderAccepting: OrderResponse | null;
   loading: boolean;
   error: string | null;
 };
 
 const initialState: OrderState = {
-  orderDetails: null,
+  orderAccepting: null,
   loading: false,
   error: null,
 };
 
-export const fetchOrderDetails = createAsyncThunk<
+export const fetchOrderAccepting = createAsyncThunk<
   OrderResponse,
-  FetchOrderDetailsArgs,
+  FetchOrderAcceptingArgs,
   {
     rejectValue: string;
   }
 >(
-  'order/fetchOrderDetails',
+  'order/fetchOrderAccepting',
   async ({ ingredientIds, accessToken }, { rejectWithValue }) => {
     try {
-      const response = await API.orderDetails(ingredientIds, accessToken);
+      const response = await API.orderAccepting(ingredientIds, accessToken);
       return response;
     } catch (error: unknown) {
       let message = 'Failed to fetch order details';
@@ -57,19 +57,19 @@ export const orderSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrderDetails.pending, (state) => {
+      .addCase(fetchOrderAccepting.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(
-        fetchOrderDetails.fulfilled,
+        fetchOrderAccepting.fulfilled,
         (state, action: PayloadAction<OrderResponse>) => {
           state.loading = false;
-          state.orderDetails = action.payload;
+          state.orderAccepting = action.payload;
         }
       )
       .addCase(
-        fetchOrderDetails.rejected,
+        fetchOrderAccepting.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload ?? 'Неизвестная ошибка';
