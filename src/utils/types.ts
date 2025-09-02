@@ -75,3 +75,9 @@ export type TFormLink = {
   label: string;
   href: string;
 };
+
+export const statusMap: Record<string, string> = {
+  done: 'Выполнен',
+  pending: 'Готовится',
+  created: 'Создан',
+};

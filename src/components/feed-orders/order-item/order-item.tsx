@@ -3,18 +3,13 @@ import { Link } from 'react-router-dom';
 
 import { Price } from '@components/ui/price/price.tsx';
 import { formatRelativeDate } from '@utils/formatRelativeDate';
+import { statusMap } from '@utils/types';
 
 import type { RootState } from '@services/store';
 import type { TOrder, TIngredient } from '@utils/types';
 import type { FC } from 'react';
 
 import styles from './order-item.module.css';
-
-const statusMap: Record<string, string> = {
-  done: 'Выполнен',
-  pending: 'Готовится',
-  created: 'Создан',
-};
 
 type OrderItemVariant = 'feed' | 'profile';
 
@@ -34,9 +29,9 @@ export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
 
   return (
     <Link
-      to={`/feed/${orderItem._id}`}
-      state={{ background: location }}
-      className={`${styles.link}`}
+      to={`/feed/${orderItem.number}`}
+      state={{ backgroundPath: location.pathname }}
+      className={styles.link}
     >
       <div className={`${styles.orderItem} p-6`}>
         <div className={`${styles.top}`}>

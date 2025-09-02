@@ -67,7 +67,7 @@ export const IngredientItem: FC<IngredientItemProps> = ({ ingredient }) => {
   return (
     <Link
       to={`/ingredients/${ingredient._id}`}
-      state={{ background: location }}
+      state={{ backgroundPath: location.pathname }}
       className={styles.link}
       onClick={handleClick}
       style={{

@@ -6,6 +6,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details';
 import { Modal } from '@components/modals/modal/modal.tsx';
+import { OrderDetails } from '@components/modals/order-details/order-details.tsx';
 import { PageOverlay } from '@components/page-overlay/page-overlay.tsx';
 import { OnlyAuth, OnlyUnAuth } from '@components/protected-route/protected-route';
 import { Feed } from '@pages/feed/feed.tsx';
@@ -28,20 +29,37 @@ import type React from 'react';
 import styles from './app.module.css';
 
 type TLocationState = {
-  background?: Location;
+  backgroundPath?: string;
 };
+
+function getLocationState(state: unknown): TLocationState | null {
+  if (state && typeof state === 'object' && !Array.isArray(state)) {
+    return state as TLocationState;
+  }
+  return null;
+}
 
 export const App = (): React.JSX.Element => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const state = location.state as TLocationState | null;
-  const background = state?.background;
+  const state = getLocationState(location.state);
+  const backgroundPath = state?.backgroundPath;
 
   const { ingredients, loading: ingredientsLoading } = useAppSelector(
     (state: RootState) => state.ingredients
   );
+
+  const backgroundLocation = backgroundPath
+    ? {
+        pathname: backgroundPath,
+        search: location.search,
+        hash: location.hash,
+        state,
+        key: location.key ?? 'default-key',
+      }
+    : location;
 
   useEffect((): ReturnType<EffectCallback> => {
     const controller = new AbortController();
@@ -77,38 +95,46 @@ export const App = (): React.JSX.Element => {
     <div className={styles.app}>
       <AppHeader />
       <main className={`${styles.main} pl-5 pr-5`}>
-        <Routes location={background ?? location}>
-          <Route path="/" element={<Home />}></Route>
+        <Routes location={backgroundLocation}>
+          <Route path="/" element={<Home />} />
           <Route path="/ingredients/:ingredientId" element={<IngredientDetails />} />
-          <Route path="/login" element={<OnlyUnAuth component={<Login />} />}></Route>
+          <Route path="/login" element={<OnlyUnAuth component={<Login />} />} />
           <Route
             path="/registration"
             element={<OnlyUnAuth component={<Registration />} />}
-          ></Route>
+          />
           <Route
             path="/forgot-password"
             element={<OnlyUnAuth component={<ForgotPassword />} />}
-          ></Route>
+          />
           <Route
             path="/reset-password"
             element={<OnlyUnAuth component={<ResetPassword />} />}
-          ></Route>
+          />
           <Route path="profile" element={<OnlyAuth component={<ProfileLayout />} />}>
             <Route index element={<Profile />} />
             <Route path="orders" element={<OrdersHistory />} />
-            {/*<Route path='orders/:number' element={<OrderAccepting />} />*/}
           </Route>
           <Route path="/feed" element={<Feed />} />
+          <Route path="/feed/:orderNumber" element={<OrderDetails />} />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
 
-        {background && (
+        {backgroundPath && (
           <Routes>
             <Route
               path="/ingredients/:ingredientId"
               element={
                 <Modal title="Детали ингредиента" onClose={handleModalClose}>
                   <IngredientDetails modal />
+                </Modal>
+              }
+            />
+            <Route
+              path="/feed/:orderNumber"
+              element={
+                <Modal onClose={handleModalClose}>
+                  <OrderDetails modal />
                 </Modal>
               }
             />
