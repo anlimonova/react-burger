@@ -1,8 +1,8 @@
+import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Price } from '@components/ui/price/price.tsx';
-import { formatRelativeDate } from '@utils/formatRelativeDate';
 import { statusMap } from '@utils/types';
 
 import type { RootState } from '@services/store';
@@ -22,7 +22,7 @@ export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
   const ingredients = useSelector((state: RootState) => state.ingredients.ingredients);
 
   const orderIngredients: TIngredient[] = orderItem.ingredients
-    .map((id) => ingredients.find((ingredient) => ingredient._id === id))
+    .map((id) => ingredients?.find((ingredient) => ingredient._id === id))
     .filter(Boolean) as TIngredient[];
 
   const totalPrice = orderIngredients.reduce((sum, item) => sum + item.price, 0);
@@ -37,7 +37,7 @@ export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
         <div className={`${styles.top}`}>
           <span className={`text text_type_digits-default`}>#{orderItem.number}</span>
           <span className={`text text_type_main-default text_color_inactive`}>
-            {formatRelativeDate(orderItem.createdAt)}
+            {<FormattedDate date={new Date(orderItem.createdAt)} />}
           </span>
         </div>
 

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { FeedInfo } from '@components/feed-info/feed-info';
 import { FeedOrders } from '@components/feed-orders/feed-orders';
 import { PageOverlay } from '@components/page-overlay/page-overlay.tsx';
-import { fetchOrders } from '@services/slices/feedSlice';
+import { connectFeed, disconnectFeed } from '@services/slices/feedSlice.ts';
 
 import type { RootState } from '@services/store';
 import type { FC } from 'react';
@@ -13,21 +13,18 @@ import styles from './feed.module.css';
 
 export const Feed: FC = () => {
   const dispatch = useAppDispatch();
-  const {
-    orders,
-    loading: ordersLoading,
-    total,
-    totalToday,
-  } = useAppSelector((state: RootState) => state.feed);
+  const { orders, status, total, totalToday } = useAppSelector(
+    (state: RootState) => state.feed
+  );
 
   useEffect(() => {
-    const promise = dispatch(fetchOrders({}));
+    dispatch(connectFeed('wss://norma.nomoreparties.space/orders/all'));
     return (): void => {
-      promise.abort?.();
+      dispatch(disconnectFeed());
     };
   }, [dispatch]);
 
-  if (ordersLoading) {
+  if (status === 'connecting') {
     return (
       <div className={styles.app}>
         <PageOverlay />

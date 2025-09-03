@@ -1,6 +1,6 @@
 import { request } from './request';
 
-import type { TAuthResponse, TIngredient } from '@utils/types';
+import type { TAuthResponse, TIngredient, TOrder } from '@utils/types';
 
 type OrderResponse = {
   success: boolean;
@@ -123,5 +123,22 @@ export const API = {
         Authorization: accessToken,
       },
       body: JSON.stringify({ name, email, password }),
+    }),
+
+  // Прямой запрос заказа по номеру
+  // Прямой запрос заказа по номеру
+  getOrderByNumber: (
+    orderNumber: number,
+    signal?: AbortSignal
+  ): Promise<TOrder | null> =>
+    request<{ success: boolean; orders: TOrder[] }>(`/orders/${orderNumber}`, {
+      method: 'GET',
+      signal,
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => {
+      if (res.success && Array.isArray(res.orders) && res.orders.length > 0) {
+        return res.orders[0];
+      }
+      return null;
     }),
 };

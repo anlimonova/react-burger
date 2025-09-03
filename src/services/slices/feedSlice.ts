@@ -1,109 +1,58 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAction, createSlice } from '@reduxjs/toolkit';
 
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { isValidOrder } from '@utils/isValirOrder.ts';
+
 import type { TOrder, TOrdersResponse } from '@utils/types';
 
-type OrdersState = {
+export const connectFeed = createAction<string>('feed/connect');
+export const disconnectFeed = createAction('feed/disconnect');
+
+export const onConnectingFeed = createAction('feed/onConnecting');
+export const onOpenFeed = createAction('feed/onOpen');
+export const onCloseFeed = createAction('feed/onClose');
+export const onErrorFeed = createAction<string>('feed/onError');
+export const onMessageFeed = createAction<TOrdersResponse>('feed/onMessage');
+
+type FeedState = {
   orders: TOrder[];
   total: number;
   totalToday: number;
-  loading: boolean;
+  status: 'offline' | 'connecting' | 'online';
   error: string | null;
 };
 
-const initialState: OrdersState = {
+const initialState: FeedState = {
   orders: [],
   total: 0,
   totalToday: 0,
-  loading: false,
+  status: 'offline',
   error: null,
 };
 
-type FetchOrdersArgs = {
-  accessToken?: string; // если есть — подключаемся к персональной ленте
-};
-
-export const fetchOrders = createAsyncThunk<
-  TOrdersResponse,
-  FetchOrdersArgs,
-  { rejectValue: string }
->('orders/fetchOrders', async ({ accessToken }, { rejectWithValue }) => {
-  const wsUrl = accessToken
-    ? `wss://norma.nomoreparties.space/orders?token=${accessToken}`
-    : 'wss://norma.nomoreparties.space/orders/all';
-
-  return new Promise<TOrdersResponse>((resolve, reject) => {
-    const ws = new WebSocket(wsUrl);
-
-    ws.onmessage = (event: MessageEvent<string>): void => {
-      let data: unknown;
-      try {
-        data = JSON.parse(event.data);
-      } catch {
-        reject(new Error('Invalid JSON from server'));
-        ws.close();
-        return;
-      }
-
-      if (typeof data === 'object' && data !== null) {
-        const d = data as Record<string, unknown>;
-
-        if (typeof d.message === 'string' && d.message === 'Invalid or missing token') {
-          reject(new Error(d.message));
-          ws.close();
-          return;
-        }
-
-        if (d.success === true) {
-          resolve(data as TOrdersResponse);
-          ws.close();
-          return;
-        }
-      }
-
-      reject(new Error('Ошибка получения заказов'));
-      ws.close();
-    };
-
-    ws.onerror = (): void => {
-      reject(new Error('WebSocket error'));
-      ws.close();
-    };
-  }).catch((err) => {
-    if (err instanceof Error) {
-      return rejectWithValue(err.message);
-    }
-    return rejectWithValue('Неизвестная ошибка');
-  });
-});
-
 export const feedSlice = createSlice({
-  name: 'orders',
+  name: 'feed',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrders.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addCase(onConnectingFeed, (state) => {
+        state.status = 'connecting';
       })
-      .addCase(
-        fetchOrders.fulfilled,
-        (state, action: PayloadAction<TOrdersResponse>) => {
-          state.loading = false;
-          state.orders = action.payload.orders;
-          state.total = action.payload.total;
-          state.totalToday = action.payload.totalToday;
-        }
-      )
-      .addCase(
-        fetchOrders.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
-          state.loading = false;
-          state.error = action.payload ?? 'Неизвестная ошибка';
-        }
-      );
+      .addCase(onOpenFeed, (state) => {
+        state.status = 'online';
+      })
+      .addCase(onCloseFeed, (state) => {
+        state.status = 'offline';
+      })
+      .addCase(onErrorFeed, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(onMessageFeed, (state, action) => {
+        state.orders = Array.isArray(action.payload.orders)
+          ? action.payload.orders.filter(isValidOrder)
+          : [];
+        state.total = action.payload.total ?? 0;
+        state.totalToday = action.payload.totalToday ?? 0;
+      });
   },
 });
-
-export default feedSlice.reducer;
