@@ -65,7 +65,7 @@ export const App = (): React.JSX.Element => {
     return (): void => {
       promise.abort?.();
     };
-  }, [dispatch, ingredients.length]);
+  }, [dispatch]);
 
   const handleModalClose = (): void => {
     dispatch(modalSlice.actions.closeModal());
