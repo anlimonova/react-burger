@@ -53,11 +53,11 @@ export const TotalPrice = (): React.JSX.Element => {
       fetchOrderAccepting({ ingredientIds, accessToken })
     );
 
-    if (fetchOrderAccepting.fulfilled.match(resultAction)) {
+    if (fetchOrderAccepting.fulfilled.match(resultAction) && resultAction.payload) {
       dispatch(
         modalSlice.actions.openModal({
           modalType: 'order',
-          modalData: { idNumber: resultAction.payload?.order?.number },
+          modalData: { idNumber: resultAction.payload.number },
         })
       );
 

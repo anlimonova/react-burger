@@ -1,14 +1,15 @@
-import { useAppSelector } from '@/hooks/reduxHooks.ts';
-import { useOrder } from '@/hooks/useOrder.ts';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
+import { fetchOrderByNumber } from '@/services/slices/orderSlice';
 import {
   FormattedDate,
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useLocation, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { PageOverlay } from '@components/page-overlay/page-overlay.tsx';
 import { Price } from '@components/ui/price/price.tsx';
-import { statusMap, type TIngredient, type TOrder } from '@utils/types';
+import { statusMap, type TIngredient } from '@utils/types';
 
 import type { RootState } from '@/services/store';
 import type React from 'react';
@@ -17,57 +18,63 @@ import styles from './order-details.module.css';
 
 type IngredientParams = { orderNumber?: string };
 
-const isTOrder = (data: unknown): data is TOrder =>
+const isTOrder = (
+  data: unknown
+): data is {
+  _id: string;
+  name: string;
+  number: number;
+  status: string;
+  ingredients: string[];
+  createdAt: string;
+} =>
   typeof data === 'object' &&
   data !== null &&
   '_id' in data &&
   'status' in data &&
   'name' in data &&
   'number' in data &&
-  'ingredients' in data &&
-  Array.isArray((data as TOrder).ingredients);
+  'ingredients' in data;
 
 export const OrderDetails: React.FC<{ modal?: boolean; from?: string }> = ({
   modal = false,
 }) => {
   const { orderNumber } = useParams<IngredientParams>();
-  const location = useLocation();
+  const dispatch = useAppDispatch();
 
-  const state = location.state as {
-    from?: 'feed' | 'profile';
-    backgroundPath?: string;
-  } | null;
-  const isProfile = state?.from === 'profile';
-
-  const { modalData } = useAppSelector((state: RootState) => state.modal);
   const { ingredients } = useAppSelector((state: RootState) => state.ingredients);
-
-  const { orders: feedOrders, status: feedStatus } = useAppSelector(
-    (state: RootState) => state.feed
+  const { orderByNumber, loading, error } = useAppSelector(
+    (state: RootState) => state.order
   );
-  const { orders: profileOrders, status: profileStatus } = useAppSelector(
+  const { orders: feedOrders } = useAppSelector((state: RootState) => state.feed);
+  const { orders: profileOrders } = useAppSelector(
     (state: RootState) => state.profileOrders
   );
+  const { modalData } = useAppSelector((state: RootState) => state.modal);
 
-  const orders = isProfile ? profileOrders : feedOrders;
-  const status = isProfile ? profileStatus : feedStatus;
+  const num = orderNumber ? Number(orderNumber) : null;
+  const foundInFeed = num ? feedOrders.find((o) => o.number === num) : null;
+  const foundInProfile = num ? profileOrders.find((o) => o.number === num) : null;
+  const foundInOrderSlice = orderByNumber?.number === num ? orderByNumber : null;
 
-  const orderFromHook = useOrder(orderNumber, orders);
+  const order = isTOrder(modalData)
+    ? modalData
+    : (foundInFeed ?? foundInProfile ?? foundInOrderSlice);
 
-  const order: TOrder | null = isTOrder(modalData) ? modalData : orderFromHook;
+  useEffect(() => {
+    if (!num) return;
 
-  if (status === 'connecting') {
-    return (
-      <div className={styles.app}>
-        <PageOverlay />
-      </div>
-    );
-  }
+    if (!foundInFeed && !foundInProfile && !foundInOrderSlice) {
+      void dispatch(fetchOrderByNumber({ orderNumber: num }));
+    }
+  }, [num, foundInFeed, foundInProfile, foundInOrderSlice, dispatch]);
 
-  if (!order) {
+  if (loading) return <PageOverlay />;
+  if (error) return <div className="text text_type_main-default mt-10">{error}</div>;
+  if (!order)
     return <div className="text text_type_main-default mt-10">Заказ не найден</div>;
-  }
 
+  // построение ингредиентов
   const ingredientMap = new Map<string, { ingredient: TIngredient; count: number }>();
   for (const id of order.ingredients) {
     const ing = ingredients.find((i) => i._id === id);
