@@ -1,6 +1,5 @@
-import { useAppDispatch } from '@/hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { AuthForm } from '@components/auth-form/auth-form';
 import { checkAuth, setUser } from '@services/slices/userSlice';
@@ -13,7 +12,7 @@ import type React from 'react';
 
 export const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user } = useAppSelector((state: RootState) => state.user);
 
   const accessToken = localStorage.getItem('accessToken') ?? '';
 

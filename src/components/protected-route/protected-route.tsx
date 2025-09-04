@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/hooks/reduxHooks.ts';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { PageOverlay } from '@components/page-overlay/page-overlay';
@@ -18,7 +18,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   component,
 }) => {
   const location = useLocation();
-  const { user, isAuthChecked } = useSelector((store: RootState) => store.user);
+  const { user, isAuthChecked } = useAppSelector((store: RootState) => store.user);
 
   if (!isAuthChecked) {
     return <PageOverlay />;

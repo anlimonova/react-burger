@@ -1,5 +1,5 @@
+import { useAppSelector } from '@/hooks/reduxHooks.ts';
 import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { Price } from '@components/ui/price/price.tsx';
@@ -19,7 +19,9 @@ type IngredientItemProps = {
 };
 
 export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
-  const ingredients = useSelector((state: RootState) => state.ingredients.ingredients);
+  const ingredients = useAppSelector(
+    (state: RootState) => state.ingredients.ingredients
+  );
 
   const orderIngredients: TIngredient[] = orderItem.ingredients
     .map((id) => ingredients?.find((ingredient) => ingredient._id === id))

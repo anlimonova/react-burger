@@ -1,10 +1,10 @@
+import { useAppSelector } from '@/hooks/reduxHooks.ts';
 import {
   BurgerIcon,
   ListIcon,
   ProfileIcon,
   Logo,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import type { TUser } from '@utils/types';
@@ -13,7 +13,9 @@ import type React from 'react';
 import styles from './app-header.module.css';
 
 export const AppHeader = (): React.JSX.Element => {
-  const { user } = useSelector((store: { user: { user: TUser | null } }) => store.user);
+  const { user } = useAppSelector(
+    (store: { user: { user: TUser | null } }) => store.user
+  );
 
   return (
     <header className={styles.header}>

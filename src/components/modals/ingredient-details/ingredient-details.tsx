@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/hooks/reduxHooks.ts';
 import { useParams } from 'react-router-dom';
 
 import { NumberInfo } from '@components/ui/number-info/number-info';
@@ -22,8 +22,8 @@ export const IngredientDetails: React.FC<IngredientDetailsProps> = ({
 }) => {
   const { ingredientId } = useParams<IngredientParams>();
 
-  const { ingredients } = useSelector((state: RootState) => state.ingredients);
-  const { modalData } = useSelector((state: RootState) => state.modal);
+  const { ingredients } = useAppSelector((state: RootState) => state.ingredients);
+  const { modalData } = useAppSelector((state: RootState) => state.modal);
 
   const ingredient: TIngredient | null =
     (modalData as TIngredient) ||
