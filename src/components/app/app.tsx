@@ -133,7 +133,7 @@ export const App = (): React.JSX.Element => {
             <Route
               path="/feed/:orderNumber"
               element={
-                <Modal onClose={handleModalClose}>
+                <Modal onClose={handleModalClose} isBig>
                   <OrderDetails modal />
                 </Modal>
               }

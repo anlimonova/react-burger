@@ -1,4 +1,5 @@
 import { request } from './request';
+import { isValidOrder } from '@utils/isValirOrder.ts';
 
 import type { TAuthResponse, TIngredient, TOrder } from '@utils/types';
 
@@ -126,9 +127,8 @@ export const API = {
     }),
 
   // Прямой запрос заказа по номеру
-  // Прямой запрос заказа по номеру
   getOrderByNumber: (
-    orderNumber: number,
+    orderNumber: string,
     signal?: AbortSignal
   ): Promise<TOrder | null> =>
     request<{ success: boolean; orders: TOrder[] }>(`/orders/${orderNumber}`, {
@@ -137,7 +137,8 @@ export const API = {
       headers: { 'Content-Type': 'application/json' },
     }).then((res) => {
       if (res.success && Array.isArray(res.orders) && res.orders.length > 0) {
-        return res.orders[0];
+        const order = res.orders[0];
+        return isValidOrder(order) ? order : null;
       }
       return null;
     }),

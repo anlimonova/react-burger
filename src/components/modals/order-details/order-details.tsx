@@ -1,22 +1,19 @@
-import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks.ts';
-import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useAppSelector } from '@/hooks/reduxHooks.ts';
+import { useOrder } from '@/hooks/useOrder.ts';
+import {
+  FormattedDate,
+  CurrencyIcon,
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import { useMatch, useParams } from 'react-router-dom';
 
 import { PageOverlay } from '@components/page-overlay/page-overlay.tsx';
 import { Price } from '@components/ui/price/price.tsx';
-import { fetchOrders } from '@services/slices/feedSlice.ts';
-import { formatRelativeDate } from '@utils/formatRelativeDate.ts';
 import { statusMap, type TIngredient, type TOrder } from '@utils/types';
 
 import type { RootState } from '@/services/store';
 import type React from 'react';
 
 import styles from './order-details.module.css';
-
-type IngredientDetailsProps = {
-  modal?: boolean;
-};
 
 type IngredientParams = {
   orderNumber?: string;
@@ -32,38 +29,32 @@ const isTOrder = (data: unknown): data is TOrder =>
   'ingredients' in data &&
   Array.isArray((data as TOrder).ingredients);
 
-export const OrderDetails: React.FC<IngredientDetailsProps> = ({ modal = false }) => {
+export const OrderDetails: React.FC<{ modal?: boolean; showTitle?: boolean }> = ({
+  modal = false,
+}) => {
   const { orderNumber } = useParams<IngredientParams>();
-  const dispatch = useAppDispatch();
+  const isProfileMatch = useMatch('/profile/orders/:orderNumber');
 
   const { modalData } = useAppSelector((state: RootState) => state.modal);
   const { ingredients } = useAppSelector((state: RootState) => state.ingredients);
-  const { orders, loading: ordersLoading } = useAppSelector(
+
+  const { orders: feedOrders, status: feedStatus } = useAppSelector(
     (state: RootState) => state.feed
   );
+  const { orders: profileOrders, status: profileStatus } = useAppSelector(
+    (state: RootState) => state.profileOrders
+  );
 
-  console.log(ordersLoading);
+  const orders = isProfileMatch ? profileOrders : feedOrders;
+  const status = isProfileMatch ? profileStatus : feedStatus;
 
-  useEffect(() => {
-    if (orders.length === 0) {
-      const promise = dispatch(fetchOrders({}));
-      return (): void => {
-        promise.abort?.();
-      };
-    }
-  }, [dispatch, orders.length]);
+  const orderFromHook = useOrder(orderNumber, orders);
 
-  const order: TOrder | null = useMemo(() => {
-    if (isTOrder(modalData)) return modalData;
-    if (orderNumber) {
-      return orders.find((ord) => String(ord.number) === orderNumber) ?? null;
-    }
-    return null;
-  }, [modalData, orders, orderNumber]);
+  const order: TOrder | null = isTOrder(modalData) ? modalData : orderFromHook;
 
-  if (ordersLoading) {
+  if (status === 'connecting') {
     return (
-      <div className={`${styles.app}`}>
+      <div className={styles.app}>
         <PageOverlay />
       </div>
     );
@@ -71,7 +62,6 @@ export const OrderDetails: React.FC<IngredientDetailsProps> = ({ modal = false }
 
   if (!order) {
     return <div className="text text_type_main-default mt-10">Заказ не найден</div>;
-    // todo: добавить запрос по номеру заказа GET https://norma.nomoreparties.space/api/orders/{номер заказа}
   }
 
   const orderIngredientsMap: { ingredient: TIngredient; count: number }[] = [];
@@ -100,7 +90,10 @@ export const OrderDetails: React.FC<IngredientDetailsProps> = ({ modal = false }
   );
 
   return (
-    <div className={!modal ? styles.pageContent : undefined}>
+    <div className={`${styles.pageContent}`}>
+      <h2 className={`${styles.title} text text_type_digits-default`}>
+        #{order.number}
+      </h2>
       {!modal && <span className="text text_type_digits-default">#{order.number}</span>}
       <div className="text text_type_main-medium mt-10">{order.name}</div>
       <div
@@ -110,7 +103,7 @@ export const OrderDetails: React.FC<IngredientDetailsProps> = ({ modal = false }
       </div>
 
       <div className="text text_type_main-medium mt-15">Состав:</div>
-      <div className={`${styles.ingredientsContainer}`}>
+      <div className={`${styles.ingredientsContainer} custom-scroll`}>
         {orderIngredientsMap.map(({ ingredient, count }, index) => (
           <div key={ingredient._id} className={`${styles.ingredient}`}>
             <div
@@ -123,7 +116,9 @@ export const OrderDetails: React.FC<IngredientDetailsProps> = ({ modal = false }
                 className={`${styles.image}`}
               />
             </div>
-            <p className="text text_type_main-medium mt-6">{ingredient.name}</p>
+            <p className={`${styles.name} text text_type_main-medium`}>
+              {ingredient.name}
+            </p>
             <div className={`${styles.ingredientPrice}`}>
               <span className="text text_type_digits-default">
                 {count} x {ingredient.price}
@@ -136,7 +131,7 @@ export const OrderDetails: React.FC<IngredientDetailsProps> = ({ modal = false }
 
       <div className={`${styles.bottom} mt-10`}>
         <span className="text text_type_main-default text_color_inactive">
-          {formatRelativeDate(order.createdAt)}
+          {<FormattedDate date={new Date(order.createdAt)} />}
         </span>
         <Price price={totalPrice} />
       </div>

@@ -29,6 +29,10 @@
   text-align: center;
 }
 
+.big .modal-content {
+  max-width: 640px;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;

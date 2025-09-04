@@ -13,11 +13,12 @@ type ModalProps = {
   title?: string;
   onClose: () => void;
   children: ReactNode;
+  isBig?: boolean;
 };
 
 const modalRoot = document.getElementById('react-modals');
 
-export const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
+export const Modal: React.FC<ModalProps> = ({ title, onClose, children, isBig }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape') {
@@ -32,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
   if (!modalRoot) return null;
 
   return createPortal(
-    <div className={styles['modal-wrapper']}>
+    <div className={`${styles['modal-wrapper']} ${isBig ? 'big' : ''}`}>
       <div className={`${styles.modal} pl-10 pr-10 pb-15 pt-10`}>
         <header className={styles['modal-header']}>
           {title && <h2 className="text_type_main-large">{title}</h2>}
