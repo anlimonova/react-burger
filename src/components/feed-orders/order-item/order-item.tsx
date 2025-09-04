@@ -29,15 +29,19 @@ export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
 
   return (
     <Link
-      to={`/feed/${orderItem.number}`}
-      state={{ backgroundPath: location.pathname }}
+      to={
+        variant === 'profile'
+          ? `/profile/orders/${orderItem.number}`
+          : `/feed/${orderItem.number}`
+      }
+      state={{ backgroundPath: location.pathname, from: variant ?? 'feed' }}
       className={styles.link}
     >
       <div className={`${styles.orderItem} p-6`}>
         <div className={`${styles.top}`}>
           <span className={`text text_type_digits-default`}>#{orderItem.number}</span>
           <span className={`text text_type_main-default text_color_inactive`}>
-            {<FormattedDate date={new Date(orderItem.createdAt)} />}
+            <FormattedDate date={new Date(orderItem.createdAt)} />
           </span>
         </div>
 

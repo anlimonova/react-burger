@@ -11,7 +11,10 @@ export function useOrder(
   const [order, setOrder] = useState<TOrder | null>(null);
 
   useEffect(() => {
-    if (!orderNumber) return;
+    if (!orderNumber) {
+      setOrder(null);
+      return;
+    }
 
     const controller = new AbortController();
 
@@ -22,7 +25,7 @@ export function useOrder(
         return;
       }
 
-      const fetched = await API.getOrderByNumber(orderNumber, controller.signal);
+      const fetched = await API.getOrderByNumber(Number(orderNumber), controller.signal);
       setOrder(fetched);
     };
 

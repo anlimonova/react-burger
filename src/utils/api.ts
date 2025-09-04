@@ -128,7 +128,7 @@ export const API = {
 
   // Прямой запрос заказа по номеру
   getOrderByNumber: (
-    orderNumber: string,
+    orderNumber: number,
     signal?: AbortSignal
   ): Promise<TOrder | null> =>
     request<{ success: boolean; orders: TOrder[] }>(`/orders/${orderNumber}`, {

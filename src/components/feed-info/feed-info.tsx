@@ -34,14 +34,14 @@ export const FeedInfo: React.FC<FeedInfoProps> = ({
         <div className={`${styles['order-numbers-wrapper']}`}>
           <div className={`${styles['order-numbers-container']}`}>
             <h4 className="text text_type_main-medium mb-6">Готовы:</h4>
-            {doneChunks.map((chunk, idx) => (
+            {doneChunks.slice(0, 2).map((chunk, idx) => (
               <FeedNumberList key={idx} list={chunk} className={styles.green} />
             ))}
           </div>
 
           <div className={`${styles['order-numbers-container']}`}>
             <h4 className="text text_type_main-medium mb-6">В работе:</h4>
-            {pendingChunks.map((chunk, idx) => (
+            {pendingChunks.slice(0, 2).map((chunk, idx) => (
               <FeedNumberList key={idx} list={chunk} />
             ))}
           </div>

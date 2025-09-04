@@ -4,7 +4,7 @@ import {
   FormattedDate,
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useMatch, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { PageOverlay } from '@components/page-overlay/page-overlay.tsx';
 import { Price } from '@components/ui/price/price.tsx';
@@ -15,9 +15,7 @@ import type React from 'react';
 
 import styles from './order-details.module.css';
 
-type IngredientParams = {
-  orderNumber?: string;
-};
+type IngredientParams = { orderNumber?: string };
 
 const isTOrder = (data: unknown): data is TOrder =>
   typeof data === 'object' &&
@@ -29,11 +27,15 @@ const isTOrder = (data: unknown): data is TOrder =>
   'ingredients' in data &&
   Array.isArray((data as TOrder).ingredients);
 
-export const OrderDetails: React.FC<{ modal?: boolean; showTitle?: boolean }> = ({
-  modal = false,
-}) => {
+export const OrderDetails: React.FC<{ modal?: boolean }> = ({ modal = false }) => {
   const { orderNumber } = useParams<IngredientParams>();
-  const isProfileMatch = useMatch('/profile/orders/:orderNumber');
+  const location = useLocation();
+
+  const state = location.state as {
+    from?: 'feed' | 'profile';
+    backgroundPath?: string;
+  } | null;
+  const isProfile = state?.from === 'profile';
 
   const { modalData } = useAppSelector((state: RootState) => state.modal);
   const { ingredients } = useAppSelector((state: RootState) => state.ingredients);
@@ -45,8 +47,8 @@ export const OrderDetails: React.FC<{ modal?: boolean; showTitle?: boolean }> = 
     (state: RootState) => state.profileOrders
   );
 
-  const orders = isProfileMatch ? profileOrders : feedOrders;
-  const status = isProfileMatch ? profileStatus : feedStatus;
+  const orders = isProfile ? profileOrders : feedOrders;
+  const status = isProfile ? profileStatus : feedStatus;
 
   const orderFromHook = useOrder(orderNumber, orders);
 
@@ -64,33 +66,23 @@ export const OrderDetails: React.FC<{ modal?: boolean; showTitle?: boolean }> = 
     return <div className="text text_type_main-default mt-10">Заказ не найден</div>;
   }
 
-  const orderIngredientsMap: { ingredient: TIngredient; count: number }[] = [];
-  const ingredientCountMap = new Map<
-    string,
-    { ingredient: TIngredient; count: number }
-  >();
-
+  const ingredientMap = new Map<string, { ingredient: TIngredient; count: number }>();
   for (const id of order.ingredients) {
     const ing = ingredients.find((i) => i._id === id);
     if (!ing) continue;
-
-    const existing = ingredientCountMap.get(id);
-    if (existing) {
-      existing.count += 1;
-    } else {
-      ingredientCountMap.set(id, { ingredient: ing, count: 1 });
-    }
+    const existing = ingredientMap.get(id);
+    if (existing) existing.count += 1;
+    else ingredientMap.set(id, { ingredient: ing, count: 1 });
   }
 
-  orderIngredientsMap.push(...ingredientCountMap.values());
-
-  const totalPrice = orderIngredientsMap.reduce(
+  const orderIngredients = Array.from(ingredientMap.values());
+  const totalPrice = orderIngredients.reduce(
     (sum, item) => sum + item.ingredient.price * item.count,
     0
   );
 
   return (
-    <div className={`${styles.pageContent}`}>
+    <div className={styles.pageContent}>
       <h2 className={`${styles.title} text text_type_digits-default`}>
         #{order.number}
       </h2>
@@ -104,22 +96,22 @@ export const OrderDetails: React.FC<{ modal?: boolean; showTitle?: boolean }> = 
 
       <div className="text text_type_main-medium mt-15">Состав:</div>
       <div className={`${styles.ingredientsContainer} custom-scroll`}>
-        {orderIngredientsMap.map(({ ingredient, count }, index) => (
-          <div key={ingredient._id} className={`${styles.ingredient}`}>
+        {orderIngredients.map(({ ingredient, count }, idx) => (
+          <div key={ingredient._id} className={styles.ingredient}>
             <div
               className={`${styles.imageContainer} mr-4`}
-              style={{ zIndex: orderIngredientsMap.length - index }}
+              style={{ zIndex: orderIngredients.length - idx }}
             >
               <img
                 src={ingredient.image_mobile}
                 alt={ingredient.name}
-                className={`${styles.image}`}
+                className={styles.image}
               />
             </div>
             <p className={`${styles.name} text text_type_main-medium`}>
               {ingredient.name}
             </p>
-            <div className={`${styles.ingredientPrice}`}>
+            <div className={styles.ingredientPrice}>
               <span className="text text_type_digits-default">
                 {count} x {ingredient.price}
               </span>
@@ -131,7 +123,7 @@ export const OrderDetails: React.FC<{ modal?: boolean; showTitle?: boolean }> = 
 
       <div className={`${styles.bottom} mt-10`}>
         <span className="text text_type_main-default text_color_inactive">
-          {<FormattedDate date={new Date(order.createdAt)} />}
+          <FormattedDate date={new Date(order.createdAt)} />
         </span>
         <Price price={totalPrice} />
       </div>

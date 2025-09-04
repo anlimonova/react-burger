@@ -5,11 +5,11 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '@components/modals/ingredient-details/ingredient-details';
-import { Modal } from '@components/modals/modal/modal.tsx';
-import { OrderDetails } from '@components/modals/order-details/order-details.tsx';
-import { PageOverlay } from '@components/page-overlay/page-overlay.tsx';
+import { Modal } from '@components/modals/modal/modal';
+import { OrderDetails } from '@components/modals/order-details/order-details';
+import { PageOverlay } from '@components/page-overlay/page-overlay';
 import { OnlyAuth, OnlyUnAuth } from '@components/protected-route/protected-route';
-import { Feed } from '@pages/feed/feed.tsx';
+import { Feed } from '@pages/feed/feed';
 import { ForgotPassword } from '@pages/forgot-password/forgot-password';
 import { Home } from '@pages/home/home';
 import { Login } from '@pages/login/login';
@@ -19,37 +19,24 @@ import { ProfileLayout } from '@pages/profile-layout/profile-layout';
 import { Profile } from '@pages/profile-layout/profile/profile';
 import { Registration } from '@pages/registration/registration';
 import { ResetPassword } from '@pages/reset-password/reset-password';
-import { fetchIngredients } from '@services/slices/ingredientsSlice.ts';
+import { fetchIngredients } from '@services/slices/ingredientsSlice';
 import { modalSlice } from '@services/slices/modalSlice';
 
-import type { RootState } from '@services/store.ts';
+import type { RootState } from '@services/store';
 import type { EffectCallback } from 'react';
 import type React from 'react';
 
 import styles from './app.module.css';
 
-type TLocationState = {
-  backgroundPath?: string;
-};
-
-function getLocationState(state: unknown): TLocationState | null {
-  if (state && typeof state === 'object' && !Array.isArray(state)) {
-    return state as TLocationState;
-  }
-  return null;
-}
+type TLocationState = { backgroundPath?: string };
 
 export const App = (): React.JSX.Element => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const state = getLocationState(location.state);
+  const state = location.state as TLocationState | undefined;
   const backgroundPath = state?.backgroundPath;
-
-  const { ingredients, loading: ingredientsLoading } = useAppSelector(
-    (state: RootState) => state.ingredients
-  );
 
   const backgroundLocation = backgroundPath
     ? {
@@ -61,16 +48,18 @@ export const App = (): React.JSX.Element => {
       }
     : location;
 
+  const { ingredients, loading: ingredientsLoading } = useAppSelector(
+    (state: RootState) => state.ingredients
+  );
+
+  // Проверка авторизации
   useEffect((): ReturnType<EffectCallback> => {
     const controller = new AbortController();
-
     void dispatch(checkAuth(undefined, { signal: controller.signal }));
-
-    return () => {
-      controller.abort();
-    };
+    return () => controller.abort();
   }, [dispatch]);
 
+  // Загрузка ингредиентов
   useEffect(() => {
     const promise = dispatch(fetchIngredients());
     return (): void => {
@@ -97,6 +86,8 @@ export const App = (): React.JSX.Element => {
       <main className={`${styles.main} pl-5 pr-5`}>
         <Routes location={backgroundLocation}>
           <Route path="/" element={<Home />} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/feed/:orderNumber" element={<OrderDetails />} />
           <Route path="/ingredients/:ingredientId" element={<IngredientDetails />} />
           <Route path="/login" element={<OnlyUnAuth component={<Login />} />} />
           <Route
@@ -111,27 +102,28 @@ export const App = (): React.JSX.Element => {
             path="/reset-password"
             element={<OnlyUnAuth component={<ResetPassword />} />}
           />
-          <Route path="profile" element={<OnlyAuth component={<ProfileLayout />} />}>
+
+          <Route path="/profile" element={<OnlyAuth component={<ProfileLayout />} />}>
             <Route index element={<Profile />} />
             <Route path="orders" element={<OrdersHistory />} />
+            <Route path="orders/:orderNumber" element={<OrderDetails />} />
           </Route>
-          <Route path="/feed" element={<Feed />} />
-          <Route path="/feed/:orderNumber" element={<OrderDetails />} />
+
           <Route path="*" element={<NotFound404 />} />
         </Routes>
 
         {backgroundPath && (
           <Routes>
             <Route
-              path="/ingredients/:ingredientId"
+              path="/feed/:orderNumber"
               element={
-                <Modal title="Детали ингредиента" onClose={handleModalClose}>
-                  <IngredientDetails modal />
+                <Modal onClose={handleModalClose} isBig>
+                  <OrderDetails modal />
                 </Modal>
               }
             />
             <Route
-              path="/feed/:orderNumber"
+              path="/profile/orders/:orderNumber"
               element={
                 <Modal onClose={handleModalClose} isBig>
                   <OrderDetails modal />
