@@ -6,11 +6,16 @@
   background-color: var(--background-alt);
 }
 
-.pageContent {
+.content {
   max-width: 640px;
   height: 100%;
   margin: auto;
   text-align: left;
+}
+
+.page {
+  height: calc(100% - 120px);
+  margin-top: 120px;
 }
 
 .done {

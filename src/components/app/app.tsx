@@ -106,8 +106,8 @@ export const App = (): React.JSX.Element => {
           <Route path="/profile" element={<OnlyAuth component={<ProfileLayout />} />}>
             <Route index element={<Profile />} />
             <Route path="orders" element={<OrdersHistory />} />
-            <Route path="orders/:orderNumber" element={<OrderDetails />} />
           </Route>
+          <Route path="/profile/orders/:orderNumber" element={<OrderDetails />} />
 
           <Route path="*" element={<NotFound404 />} />
         </Routes>
@@ -118,7 +118,7 @@ export const App = (): React.JSX.Element => {
               path="/feed/:orderNumber"
               element={
                 <Modal onClose={handleModalClose} isBig>
-                  <OrderDetails modal />
+                  <OrderDetails modal from="feed" />
                 </Modal>
               }
             />
@@ -126,7 +126,7 @@ export const App = (): React.JSX.Element => {
               path="/profile/orders/:orderNumber"
               element={
                 <Modal onClose={handleModalClose} isBig>
-                  <OrderDetails modal />
+                  <OrderDetails modal from="profile" />
                 </Modal>
               }
             />

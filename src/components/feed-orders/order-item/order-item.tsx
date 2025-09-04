@@ -34,7 +34,10 @@ export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
           ? `/profile/orders/${orderItem.number}`
           : `/feed/${orderItem.number}`
       }
-      state={{ backgroundPath: location.pathname, from: variant ?? 'feed' }}
+      state={{
+        from: variant === 'profile' ? 'profile' : 'feed',
+        backgroundPath: location.pathname,
+      }}
       className={styles.link}
     >
       <div className={`${styles.orderItem} p-6`}>

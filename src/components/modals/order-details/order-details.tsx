@@ -27,7 +27,9 @@ const isTOrder = (data: unknown): data is TOrder =>
   'ingredients' in data &&
   Array.isArray((data as TOrder).ingredients);
 
-export const OrderDetails: React.FC<{ modal?: boolean }> = ({ modal = false }) => {
+export const OrderDetails: React.FC<{ modal?: boolean; from?: string }> = ({
+  modal = false,
+}) => {
   const { orderNumber } = useParams<IngredientParams>();
   const location = useLocation();
 
@@ -82,7 +84,7 @@ export const OrderDetails: React.FC<{ modal?: boolean }> = ({ modal = false }) =
   );
 
   return (
-    <div className={styles.pageContent}>
+    <div className={`${styles.content} ${!modal ? styles.page : ''}`}>
       <h2 className={`${styles.title} text text_type_digits-default`}>
         #{order.number}
       </h2>
