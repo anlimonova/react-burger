@@ -43,7 +43,9 @@ export const Feed: FC = () => {
         Лента заказов
       </h1>
       <div className={styles.wrapper}>
-        <FeedOrders orders={orders} />
+        <div className={`${styles.orders}`}>
+          <FeedOrders orders={orders} />
+        </div>
         <FeedInfo
           total={total}
           totalToday={totalToday}

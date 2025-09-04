@@ -18,3 +18,8 @@
   height: calc(100% - 100px);
   overflow: hidden;
 }
+
+.orders {
+  flex-shrink: 0;
+  width: 600px;
+}

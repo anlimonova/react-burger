@@ -115,6 +115,14 @@ export const App = (): React.JSX.Element => {
         {backgroundPath && (
           <Routes>
             <Route
+              path="/ingredients/:ingredientId"
+              element={
+                <Modal title="Детали ингредиента" onClose={handleModalClose}>
+                  <IngredientDetails modal />
+                </Modal>
+              }
+            />
+            <Route
               path="/feed/:orderNumber"
               element={
                 <Modal onClose={handleModalClose} isBig>
