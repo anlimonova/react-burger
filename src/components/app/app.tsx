@@ -135,9 +135,13 @@ export const App = (): React.JSX.Element => {
             <Route
               path="/profile/orders/:orderNumber"
               element={
-                <Modal onClose={handleModalClose} isBig>
-                  <OrderDetails modal from="profile" />
-                </Modal>
+                <OnlyAuth
+                  component={
+                    <Modal onClose={handleModalClose} isBig>
+                      <OrderDetails modal from="profile" />
+                    </Modal>
+                  }
+                />
               }
             />
           </Routes>

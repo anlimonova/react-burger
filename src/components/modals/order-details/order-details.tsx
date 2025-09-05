@@ -95,7 +95,6 @@ export const OrderDetails: React.FC<{ modal?: boolean; from?: string }> = ({
       <h2 className={`${styles.title} text text_type_digits-default`}>
         #{order.number}
       </h2>
-      {!modal && <span className="text text_type_digits-default">#{order.number}</span>}
       <div className="text text_type_main-medium mt-10">{order.name}</div>
       <div
         className={`${order.status === 'done' ? styles.done : ''} text text_type_main-default mt-3`}
