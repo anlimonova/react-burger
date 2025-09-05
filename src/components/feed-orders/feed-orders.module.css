@@ -1,0 +1,13 @@
+.feed_orders {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  height: 100%;
+  color: var(--text-primary-color);
+  font-family: 'Jet Brains Mono', serif;
+}
+
+.feed_orders_wrapper {
+  height: 100%;
+  overflow-y: auto;
+}

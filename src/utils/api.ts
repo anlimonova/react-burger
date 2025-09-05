@@ -1,6 +1,7 @@
 import { request } from './request';
+import { isValidOrder } from '@utils/isValirOrder.ts';
 
-import type { TAuthResponse, TIngredient } from '@utils/types';
+import type { TAuthResponse, TIngredient, TOrder } from '@utils/types';
 
 type OrderResponse = {
   success: boolean;
@@ -35,7 +36,7 @@ export const API = {
     request('/ingredients', { signal }),
 
   // Отправка данных заказа
-  orderDetails: (
+  orderAccepting: (
     ingredientIds: string[],
     accessToken?: string
   ): Promise<OrderResponse> =>
@@ -123,5 +124,22 @@ export const API = {
         Authorization: accessToken,
       },
       body: JSON.stringify({ name, email, password }),
+    }),
+
+  // Прямой запрос заказа по номеру
+  getOrderByNumber: (
+    orderNumber: number,
+    signal?: AbortSignal
+  ): Promise<TOrder | null> =>
+    request<{ success: boolean; orders: TOrder[] }>(`/orders/${orderNumber}`, {
+      method: 'GET',
+      signal,
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => {
+      if (res.success && Array.isArray(res.orders) && res.orders.length > 0) {
+        const order = res.orders[0];
+        return isValidOrder(order) ? order : null;
+      }
+      return null;
     }),
 };

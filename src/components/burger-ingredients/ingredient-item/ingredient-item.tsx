@@ -1,8 +1,7 @@
-import { useAppDispatch } from '@/hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import { Price } from '@components/ui/price/price';
@@ -22,7 +21,7 @@ export const IngredientItem: FC<IngredientItemProps> = ({ ingredient }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  const { bun, ingredients } = useSelector(
+  const { bun, ingredients } = useAppSelector(
     (state: RootState) => state.selectedIngredients
   );
 
@@ -67,7 +66,7 @@ export const IngredientItem: FC<IngredientItemProps> = ({ ingredient }) => {
   return (
     <Link
       to={`/ingredients/${ingredient._id}`}
-      state={{ background: location }}
+      state={{ backgroundPath: location.pathname }}
       className={styles.link}
       onClick={handleClick}
       style={{

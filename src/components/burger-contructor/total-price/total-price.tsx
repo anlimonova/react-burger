@@ -4,11 +4,11 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Modal } from '@components/modals/modal/modal';
-import { OrderDetails } from '@components/modals/order-details/order-details';
+import { OrderAccepting } from '@components/modals/order-accepting/order-accepting.tsx';
 import { PageOverlay } from '@components/page-overlay/page-overlay';
 import { Price } from '@components/ui/price/price';
 import { modalSlice } from '@services/slices/modalSlice';
-import { fetchOrderDetails } from '@services/slices/orderSlice';
+import { fetchOrderAccepting } from '@services/slices/orderSlice';
 import { selectedIngredientsSlice } from '@services/slices/selectedIngredientsSlice';
 import { isOrderModalData } from '@utils/typeGuards';
 
@@ -50,14 +50,14 @@ export const TotalPrice = (): React.JSX.Element => {
     }
 
     const resultAction = await dispatch(
-      fetchOrderDetails({ ingredientIds, accessToken })
+      fetchOrderAccepting({ ingredientIds, accessToken })
     );
 
-    if (fetchOrderDetails.fulfilled.match(resultAction)) {
+    if (fetchOrderAccepting.fulfilled.match(resultAction) && resultAction.payload) {
       dispatch(
         modalSlice.actions.openModal({
           modalType: 'order',
-          modalData: { idNumber: resultAction.payload?.order?.number },
+          modalData: { idNumber: resultAction.payload.number },
         })
       );
 
@@ -66,7 +66,7 @@ export const TotalPrice = (): React.JSX.Element => {
   };
 
   return (
-    <section className={`${styles['total-price']} pr-4`}>
+    <section className={`${styles['total-price']} pr-4 pt-10`}>
       <Price price={totalPriceValue} isLarge />
       <Button
         htmlType="button"
@@ -82,7 +82,7 @@ export const TotalPrice = (): React.JSX.Element => {
 
       {modalType === 'order' && isOrderModalData(modalData) && (
         <Modal onClose={() => dispatch(modalSlice.actions.closeModal())}>
-          <OrderDetails idNumber={modalData.idNumber} />
+          <OrderAccepting idNumber={modalData.idNumber} />
         </Modal>
       )}
 

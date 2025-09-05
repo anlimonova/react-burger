@@ -1,9 +1,9 @@
+import { useAppSelector } from '@/hooks/reduxHooks.ts';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
-import { entries } from '@utils/entries'; // наш новый хелпер
+import { entries } from '@utils/entries';
 
 import type { RootState } from '@services/store';
 import type { TIngredient } from '@utils/types';
@@ -19,7 +19,7 @@ type Group = {
 };
 
 export const BurgerIngredients: React.FC = () => {
-  const { ingredients } = useSelector((state: RootState) => state.ingredients);
+  const { ingredients } = useAppSelector((state: RootState) => state.ingredients);
 
   const filterIngredientsByType = (type: IngredientType): TIngredient[] => {
     return ingredients.filter((ingredient) => ingredient.type === type);

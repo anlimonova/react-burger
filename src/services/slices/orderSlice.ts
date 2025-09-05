@@ -5,51 +5,75 @@ import { API } from '@utils/api';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 type OrderResponse = {
+  _id: string;
   name: string;
-  order: {
-    number: number;
-  };
-  success: boolean;
+  number: number;
+  status: string;
+  ingredients: string[];
+  createdAt: string;
 };
 
-type FetchOrderDetailsArgs = {
+type FetchOrderByNumberArgs = {
+  orderNumber: number;
+};
+
+type FetchOrderAcceptingArgs = {
   ingredientIds: string[];
   accessToken: string;
 };
 
 type OrderState = {
-  orderDetails: OrderResponse | null;
+  orderAccepting: OrderResponse | null;
+  orderByNumber: OrderResponse | null;
   loading: boolean;
   error: string | null;
 };
 
 const initialState: OrderState = {
-  orderDetails: null,
+  orderAccepting: null,
+  orderByNumber: null,
   loading: false,
   error: null,
 };
 
-export const fetchOrderDetails = createAsyncThunk<
+export const fetchOrderAccepting = createAsyncThunk<
   OrderResponse,
-  FetchOrderDetailsArgs,
-  {
-    rejectValue: string;
-  }
+  FetchOrderAcceptingArgs,
+  { rejectValue: string }
 >(
-  'order/fetchOrderDetails',
+  'order/fetchOrderAccepting',
   async ({ ingredientIds, accessToken }, { rejectWithValue }) => {
     try {
-      const response = await API.orderDetails(ingredientIds, accessToken);
-      return response;
+      const response = await API.orderAccepting(ingredientIds, accessToken);
+      return {
+        _id: '', // нет id от API? можно оставить пустым или сгенерировать uuid
+        name: response.name,
+        number: response.order.number,
+        status: 'created',
+        ingredients: ingredientIds,
+        createdAt: new Date().toISOString(),
+      };
     } catch (error: unknown) {
-      let message = 'Failed to fetch order details';
-      if (error instanceof Error) {
-        message = error.message;
-      }
+      const message =
+        error instanceof Error ? error.message : 'Failed to fetch order details';
       return rejectWithValue(message);
     }
   }
 );
+
+export const fetchOrderByNumber = createAsyncThunk<
+  OrderResponse | null,
+  FetchOrderByNumberArgs,
+  { rejectValue: string }
+>('order/fetchOrderByNumber', async ({ orderNumber }, { rejectWithValue }) => {
+  try {
+    return await API.getOrderByNumber(orderNumber);
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Failed to fetch order by number';
+    return rejectWithValue(message);
+  }
+});
 
 export const orderSlice = createSlice({
   name: 'order',
@@ -57,19 +81,38 @@ export const orderSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrderDetails.pending, (state) => {
+      .addCase(fetchOrderAccepting.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(
-        fetchOrderDetails.fulfilled,
+        fetchOrderAccepting.fulfilled,
         (state, action: PayloadAction<OrderResponse>) => {
           state.loading = false;
-          state.orderDetails = action.payload;
+          state.orderAccepting = action.payload;
         }
       )
       .addCase(
-        fetchOrderDetails.rejected,
+        fetchOrderAccepting.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error = action.payload ?? 'Неизвестная ошибка';
+        }
+      )
+
+      .addCase(fetchOrderByNumber.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        fetchOrderByNumber.fulfilled,
+        (state, action: PayloadAction<OrderResponse | null>) => {
+          state.loading = false;
+          state.orderByNumber = action.payload ?? null;
+        }
+      )
+      .addCase(
+        fetchOrderByNumber.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload ?? 'Неизвестная ошибка';
