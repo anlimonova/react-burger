@@ -1,5 +1,5 @@
 import { request } from './request';
-import { isValidOrder } from '@utils/isValirOrder.ts';
+import { isValidOrder } from '@utils/isValidOrder.ts';
 
 import type { TAuthResponse, TIngredient, TOrder } from '@utils/types';
 

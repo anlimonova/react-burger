@@ -8,7 +8,7 @@ type ModalState = {
   modalData: TModalData;
 };
 
-const initialState: ModalState = {
+export const initialState: ModalState = {
   modalType: null,
   modalData: null,
 };

@@ -1,6 +1,6 @@
 import { createSlice, createAction } from '@reduxjs/toolkit';
 
-import { isValidOrder } from '@utils/isValirOrder.ts';
+import { isValidOrder } from '@utils/isValidOrder.ts';
 
 import type { TOrdersResponse, TOrder } from '@utils/types';
 
@@ -23,7 +23,7 @@ type ProfileOrdersState = {
   error: string | null;
 };
 
-const initialState: ProfileOrdersState = {
+export const initialState: ProfileOrdersState = {
   orders: [],
   total: 0,
   totalToday: 0,
