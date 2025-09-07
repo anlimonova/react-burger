@@ -1,6 +1,6 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 
-import { isValidOrder } from '@utils/isValirOrder.ts';
+import { isValidOrder } from '@utils/isValidOrder.ts';
 
 import type { TOrder, TOrdersResponse } from '@utils/types';
 
@@ -21,7 +21,7 @@ type FeedState = {
   error: string | null;
 };
 
-const initialState: FeedState = {
+export const initialState: FeedState = {
   orders: [],
   total: 0,
   totalToday: 0,

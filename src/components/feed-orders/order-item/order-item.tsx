@@ -66,7 +66,7 @@ export const OrderItem: FC<IngredientItemProps> = ({ orderItem, variant }) => {
               <div
                 key={item._id + index}
                 className={`${styles.imageContainer}`}
-                style={{ zIndex: orderIngredients.length - index }}
+                style={{ zIndex: 6 - index }}
               >
                 <img
                   src={item.image_mobile}

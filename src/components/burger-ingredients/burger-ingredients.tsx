@@ -84,6 +84,7 @@ export const BurgerIngredients: React.FC = () => {
         ref={wrapperRef}
         className={`${styles.burger_ingredients_wrapper} custom-scroll pb-10`}
         onScroll={handleScroll}
+        data-cy="ingredients-list"
       >
         {entries(groups).map(([id, { title, ref }]) => (
           <IngredientsGroup

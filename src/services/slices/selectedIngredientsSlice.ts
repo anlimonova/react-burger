@@ -18,7 +18,7 @@ type SelectedIngredientsState = {
   ingredients: SelectedIngredient[];
 };
 
-const initialState: SelectedIngredientsState = loadFromSession(
+export const initialState: SelectedIngredientsState = loadFromSession(
   SELECTED_INGREDIENTS_KEY
 ) ?? {
   bun: null,

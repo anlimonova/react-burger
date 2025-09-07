@@ -29,7 +29,7 @@ type OrderState = {
   error: string | null;
 };
 
-const initialState: OrderState = {
+export const initialState: OrderState = {
   orderAccepting: null,
   orderByNumber: null,
   loading: false,
@@ -46,7 +46,7 @@ export const fetchOrderAccepting = createAsyncThunk<
     try {
       const response = await API.orderAccepting(ingredientIds, accessToken);
       return {
-        _id: '', // нет id от API? можно оставить пустым или сгенерировать uuid
+        _id: '',
         name: response.name,
         number: response.order.number,
         status: 'created',

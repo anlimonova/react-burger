@@ -73,6 +73,7 @@ export const IngredientItem: FC<IngredientItemProps> = ({ ingredient }) => {
         opacity: isDragging ? 0.5 : 1,
         cursor: isBunAlreadySelected ? 'not-allowed' : 'grab',
       }}
+      data-cy="ingredient-card"
     >
       <div className={styles['ingredient-item']} ref={ref}>
         {count !== 0 && <Counter count={count} size="default" extraClass="m-1" />}
@@ -84,6 +85,7 @@ export const IngredientItem: FC<IngredientItemProps> = ({ ingredient }) => {
         <Price price={ingredient.price} />
         <span
           className={styles['ingredient-item__name'] + ' text text_type_main-default'}
+          data-cy="ingredient-name"
         >
           {ingredient.name}
         </span>

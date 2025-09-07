@@ -1,9 +1,9 @@
 import { request } from './request';
-import { isValidOrder } from '@utils/isValirOrder.ts';
+import { isValidOrder } from '@utils/isValidOrder.ts';
 
 import type { TAuthResponse, TIngredient, TOrder } from '@utils/types';
 
-type OrderResponse = {
+export type OrderResponse = {
   success: boolean;
   name: string;
   order: {
@@ -25,7 +25,7 @@ type TokenResponse = {
   refreshToken: string;
 };
 
-type IngredientsResponse = {
+export type IngredientsResponse = {
   success: boolean;
   data: TIngredient[];
 };

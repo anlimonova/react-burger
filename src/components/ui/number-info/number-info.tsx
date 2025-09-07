@@ -9,7 +9,7 @@ type NumberInfoProps = {
 
 export const NumberInfo: FC<NumberInfoProps> = ({ title, number }) => {
   return (
-    <div className={styles['number-info']}>
+    <div className={styles['number-info']} data-cy="order-number">
       <span className={'text_type_main-default'}>{title}</span>
       <span className={'text_type_digits-default mt-2'}>{number}</span>
     </div>

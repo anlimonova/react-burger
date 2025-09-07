@@ -11,7 +11,10 @@ type OrderAcceptingProps = {
 export const OrderAccepting: FC<OrderAcceptingProps> = ({ idNumber }) => {
   return (
     <>
-      <span className={`${styles['order-number']} text_type_digits-large mt-4`}>
+      <span
+        className={`${styles['order-number']} text_type_digits-large mt-4`}
+        data-cy="order-number"
+      >
         {idNumber}
       </span>
       <span className="text_type_main-medium mt-8">идентификатор заказа</span>
