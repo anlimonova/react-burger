@@ -2,6 +2,7 @@
   "name": "vite_bundler",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://anlimonova.github.io/react-burger",
   "type": "module",
   "scripts": {
     "build": "vite build",
