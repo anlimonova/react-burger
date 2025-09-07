@@ -207,21 +207,21 @@ describe('Конструктор бургера: ингредиенты, DnD, м
     cy.get(selectors.ingredientCard).first().click();
     cy.get(selectors.ingredientModal).should('be.visible');
 
-    cy.location('pathname').should('match', /\/ingredients\/[^/]+$/);
+    cy.location('hash').should('match', /#\/ingredients\/[^/]+$/);
 
     cy.reload();
-    cy.wait('@getIngredients');
 
     cy.get(selectors.ingredientModal).should('be.visible');
-    cy.location('pathname').should('match', /\/ingredients\/[^/]+$/);
+    cy.location('hash').should('match', /#\/ingredients\/[^/]+$/);
   });
 
   it('открывает детальную страницу ингредиента по прямому URL', () => {
     const first = ingredients[0];
-    cy.visit(`/ingredients/${first._id}`);
-    cy.wait('@getIngredients');
+    cy.visit(`/react-burger/#/ingredients/${first._id}`);
 
     cy.get(selectors.ingredientPage).should('have.attr', 'data-cy', 'ingredient-page');
     cy.get(selectors.ingredientName).should('contain.text', first.name);
+
+    cy.location('hash').should('eq', `#/ingredients/${first._id}`);
   });
 });

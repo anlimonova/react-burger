@@ -7,6 +7,7 @@ import sassDts from 'vite-plugin-sass-dts';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/react-burger/',
   plugins: [
     checker({
       typescript: true,
@@ -18,7 +19,6 @@ export default defineConfig({
       esmExport: true,
     }),
   ],
-  base: '',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
