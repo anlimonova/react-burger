@@ -6,8 +6,8 @@ import checker from 'vite-plugin-checker';
 import sassDts from 'vite-plugin-sass-dts';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: '/react-burger/',
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/react-burger/' : '/',
   plugins: [
     checker({
       typescript: true,
@@ -31,4 +31,5 @@ export default defineConfig({
   server: {
     open: true,
   },
-});
+}));
+
