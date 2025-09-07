@@ -50,8 +50,12 @@ export const BurgerConstructor: React.FC = () => {
       <div
         className={`${styles.burger_constructor_ingredients} pl-8 pr-4`}
         ref={containerRef}
+        data-cy="constructor-area"
       >
-        <div className={styles['burger-constructor_drop-zone-top']}>
+        <div
+          className={styles['burger-constructor_drop-zone-top']}
+          data-cy="constructor-bun-top"
+        >
           {!bun && <span className="text text_type_main-default">Выберите булки</span>}
           {bun && (
             <ConstructorElement
@@ -64,7 +68,10 @@ export const BurgerConstructor: React.FC = () => {
           )}
         </div>
 
-        <ul className={`${styles.burger_constructor_filling} custom-scroll mt-4 mb-4`}>
+        <ul
+          className={`${styles.burger_constructor_filling} custom-scroll mt-4 mb-4`}
+          data-cy="constructor-fillings"
+        >
           {ingredients.length === 0 && (
             <div className={styles['burger-constructor_drop-zone-middle']}>
               <span className="text text_type_main-default">Выберите начинку</span>
@@ -80,7 +87,10 @@ export const BurgerConstructor: React.FC = () => {
           ))}
         </ul>
 
-        <div className={styles['burger-constructor_drop-zone-bottom']}>
+        <div
+          className={styles['burger-constructor_drop-zone-bottom']}
+          data-cy="constructor-bun-bottom"
+        >
           {!bun && <span className="text text_type_main-default">Выберите булки</span>}
           {bun && (
             <ConstructorElement

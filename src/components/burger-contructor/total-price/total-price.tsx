@@ -76,6 +76,7 @@ export const TotalPrice = (): React.JSX.Element => {
           void handleClick();
         }}
         disabled={!bun || ingredients.length === 0}
+        data-cy="make-order-button"
       >
         Оформить заказ
       </Button>

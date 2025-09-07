@@ -34,8 +34,15 @@ export const IngredientDetails: React.FC<IngredientDetailsProps> = ({
     return <div className="text text_type_main-default">Ингредиент не найден</div>;
 
   return (
-    <div className={!modal ? styles.pageContent : undefined}>
-      {!modal && <h1 className="text text_type_main-large mt-30">Детали ингредиента</h1>}
+    <div
+      className={!modal ? styles.pageContent : undefined}
+      data-cy={modal ? 'ingredient-modal' : 'ingredient-page'}
+    >
+      {!modal && (
+        <h1 className="text text_type_main-large mt-30" data-cy="ingredient-name">
+          Детали ингредиента
+        </h1>
+      )}
       <img
         className="mb-4"
         src={ingredient.image_large}
@@ -43,7 +50,9 @@ export const IngredientDetails: React.FC<IngredientDetailsProps> = ({
         width={480}
         height={240}
       />
-      <p className="text text_type_main-medium">{ingredient.name}</p>
+      <p className="text text_type_main-medium" data-cy="ingredient-name">
+        {ingredient.name}
+      </p>
       <div className={`${styles['nutrition-info']} mt-8`}>
         <NumberInfo title="Калории,ккал" number={ingredient.calories} />
         <NumberInfo title="Белки, г" number={ingredient.proteins} />

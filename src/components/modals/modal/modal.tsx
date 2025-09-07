@@ -41,6 +41,7 @@ export const Modal: React.FC<ModalProps> = ({ title, onClose, children, isBig })
             className={`${styles['modal-close']} ml-9`}
             onClick={onClose}
             aria-label="Закрыть модальное окно"
+            data-cy="modal-close"
           >
             <CloseIcon type="primary" />
           </button>

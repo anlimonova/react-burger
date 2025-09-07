@@ -4,7 +4,13 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import { store } from './services/store';
+
+if (import.meta.env.MODE !== 'production') {
+  (window as WindowWithStore).__APP_STORE__ = store;
+}
 import { App } from '@components/app/app';
+
+import type { WindowWithStore } from '@/global';
 
 import './index.css';
 
